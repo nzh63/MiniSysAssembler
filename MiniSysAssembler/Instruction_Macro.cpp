@@ -57,6 +57,34 @@ MachineCode Macro_FormatInstruction(const std::string& BIT,
                 }
             }
         }
+    } else if (BIT == "PUSH") {
+        if (isRegister(op1) && op2.empty() && op3.empty()) {
+            I_FormatInstruction("ADDI", "ADDI " + op1 + ", " + op1 + ", -4",
+                                unsolved_symbol_map, machine_code_it);
+            MachineCodeHandle new_handel = NewMachineCode(*cur_instruction);
+            I_FormatInstruction("SW", "SW " + op1 + ", 4($sp)",
+                                unsolved_symbol_map, new_handel);
+            cur_address += 4;
+        } else {
+            throw std::runtime_error("Invalid operation (" + BIT + ").");
+        }
+    } else if (BIT == "POP") {
+        if (isRegister(op1) && op2.empty() && op3.empty()) {
+            I_FormatInstruction("ADDI", "ADDI " + op1 + ", " + op1 + ", 4",
+                                unsolved_symbol_map, machine_code_it);
+            MachineCodeHandle new_handel = NewMachineCode(*cur_instruction);
+            I_FormatInstruction("LW", "LW " + op1 + ", 0($sp)",
+                                unsolved_symbol_map, new_handel);
+            cur_address += 4;
+        } else {
+            throw std::runtime_error("Invalid operation (" + BIT + ").");
+        }
+    } else {
+        if (isMacro_Format(assembly)) {
+            throw std::runtime_error("Invalid operation (" + BIT + ").");
+        } else {
+            throw std::runtime_error("Unkonw instruction: " + BIT + ".");
+        }
     }
     return cur_instruction->machine_code.front();
 }
