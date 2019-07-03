@@ -18,26 +18,25 @@
 
 std::regex Macro_format_regex("^(mov|push|pop)\\s", std::regex::icase);
 
-MachineCode Macro_FormatInstruction(const std::string& BIT,
+MachineCode Macro_FormatInstruction(const std::string& mnemonic,
                                     const std::string& assembly,
                                     UnsolvedSymbolMap& unsolved_symbol_map,
                                     MachineCodeHandle machine_code_it) {
     std::string op1, op2, op3;
     GetOperand(assembly, op1, op2, op3);
-    if (BIT == "MOV") {
+    if (mnemonic == "MOV") {
         if (!op3.empty()) {
-            throw std::runtime_error("Invalid operation (" + BIT + ").");
+            throw std::runtime_error("Invalid operation (" + mnemonic + ").");
         } else {
             if (isRegister(op1) && isRegister(op2)) {
                 R_FormatInstruction("OR", "OR " + op1 + ", $0, " + op2,
                                     unsolved_symbol_map, machine_code_it);
             } else if (isRegister(op1) && (isNumber(op2) || isSymbol(op2))) {
-                bool is_large_num;
-                if (isSymbol(op2) || toUNumber(op2) <= 0xffff) {
-                    is_large_num = 0;
-                } else {
-                    is_large_num = 1;
+                if (isSymbol(op2)) {
+                    Warning("Using symbol in MOV may cause error.");
                 }
+                bool is_large_num =
+                    (!isSymbol(op2)) && (toUNumber(op2) > 0xffff);
                 if (is_large_num) {
                     unsigned number = toUNumber(op2);
                     I_FormatInstruction(
@@ -57,7 +56,7 @@ MachineCode Macro_FormatInstruction(const std::string& BIT,
                 }
             }
         }
-    } else if (BIT == "PUSH") {
+    } else if (mnemonic == "PUSH") {
         if (isRegister(op1) && op2.empty() && op3.empty()) {
             I_FormatInstruction("ADDI", "ADDI " + op1 + ", " + op1 + ", -4",
                                 unsolved_symbol_map, machine_code_it);
@@ -66,9 +65,9 @@ MachineCode Macro_FormatInstruction(const std::string& BIT,
                                 unsolved_symbol_map, new_handel);
             cur_address += 4;
         } else {
-            throw std::runtime_error("Invalid operation (" + BIT + ").");
+            throw std::runtime_error("Invalid operation (" + mnemonic + ").");
         }
-    } else if (BIT == "POP") {
+    } else if (mnemonic == "POP") {
         if (isRegister(op1) && op2.empty() && op3.empty()) {
             I_FormatInstruction("ADDI", "ADDI " + op1 + ", " + op1 + ", 4",
                                 unsolved_symbol_map, machine_code_it);
@@ -77,13 +76,13 @@ MachineCode Macro_FormatInstruction(const std::string& BIT,
                                 unsolved_symbol_map, new_handel);
             cur_address += 4;
         } else {
-            throw std::runtime_error("Invalid operation (" + BIT + ").");
+            throw std::runtime_error("Invalid operation (" + mnemonic + ").");
         }
     } else {
         if (isMacro_Format(assembly)) {
-            throw std::runtime_error("Invalid operation (" + BIT + ").");
+            throw std::runtime_error("Invalid operation (" + mnemonic + ").");
         } else {
-            throw std::runtime_error("Unkonw instruction: " + BIT + ".");
+            throw std::runtime_error("Unkonw instruction: " + mnemonic + ".");
         }
     }
     return cur_instruction->machine_code.front();

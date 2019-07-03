@@ -20,7 +20,7 @@ std::regex R_format_regex(
     "^(addu?|subu?|and|[xn]?or|sltu?|s(?:ll|rl|ra)v?|jr)\\s",
     std::regex::icase);
 
-MachineCode R_FormatInstruction(const std::string& BIT,
+MachineCode R_FormatInstruction(const std::string& mnemonic,
                                 const std::string& assembly,
                                 UnsolvedSymbolMap& unsolved_symbol_map,
                                 MachineCodeHandle machine_code_it) {
@@ -40,16 +40,16 @@ MachineCode R_FormatInstruction(const std::string& BIT,
         // 两个操作数为寄存器，一个操作数为立即数的有这些
         std::unordered_map<std::string, int> func2{
             {"SLL", 0b000000}, {"SRL", 0b000010}, {"SRA", 0b000011}};
-        auto it1 = func1.find(BIT);
-        auto it2 = func2.find(BIT);
+        auto it1 = func1.find(mnemonic);
+        auto it2 = func2.find(mnemonic);
 
         if (it1 != func1.end() && isRegister(op1) && isRegister(op2) &&
             isRegister(op3)) {
             // 三个操作数均为寄存器
-            if (BIT == "SLLV" || BIT == "SRLV" || BIT == "SRAV") {
+            if (mnemonic == "SLLV" || mnemonic == "SRLV" || mnemonic == "SRAV") {
                 std::swap(op2, op3);
             }
-            SetFunc(machine_code, func1.at(BIT));
+            SetFunc(machine_code, func1.at(mnemonic));
             SetRS(machine_code, Register(op2));
             SetRT(machine_code, Register(op3));
             SetRD(machine_code, Register(op1));
@@ -57,7 +57,7 @@ MachineCode R_FormatInstruction(const std::string& BIT,
         } else if (it2 != func2.end() && isRegister(op1) && isRegister(op2) &&
                    (isNumber(op3) || isSymbol(op3))) {
             // 两个操作数为寄存器，一个操作数为立即数或标号
-            SetFunc(machine_code, func2.at(BIT));
+            SetFunc(machine_code, func2.at(mnemonic));
             SetRS(machine_code, 0);
             SetRT(machine_code, Register(op2));
             SetRD(machine_code, Register(op1));
@@ -72,7 +72,7 @@ MachineCode R_FormatInstruction(const std::string& BIT,
             goto err;
         }
     } else if (!op1.empty() && op2.empty() && op3.empty()) {  // 一操作数
-        if (BIT == "JR" && isRegister(op1)) {                 // 只有JR
+        if (mnemonic == "JR" && isRegister(op1)) {                 // 只有JR
             SetRS(machine_code, Register(op1));
             SetRT(machine_code, 0);
             SetRD(machine_code, 0);
@@ -84,9 +84,9 @@ MachineCode R_FormatInstruction(const std::string& BIT,
     } else {
     err:
         if (isR_Format(assembly)) {
-            throw std::runtime_error("Invalid operation (" + BIT + ").");
+            throw std::runtime_error("Invalid operation (" + mnemonic + ").");
         } else {
-            throw std::runtime_error("Unkonw instruction: " + BIT + ".");
+            throw std::runtime_error("Unkonw instruction: " + mnemonic + ".");
         }
     }
     return machine_code;

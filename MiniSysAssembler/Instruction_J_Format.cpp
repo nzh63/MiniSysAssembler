@@ -18,7 +18,7 @@
 
 std::regex J_format_regex("^(j|jal)\\s", std::regex::icase);
 
-MachineCode J_FormatInstruction(const std::string& BIT,
+MachineCode J_FormatInstruction(const std::string& mnemonic,
                                 const std::string& assembly,
                                 UnsolvedSymbolMap& unsolved_symbol_map,
                                 MachineCodeHandle machine_code_it) {
@@ -28,7 +28,7 @@ MachineCode J_FormatInstruction(const std::string& BIT,
         std::string op1, op2, op3;
         GetOperand(assembly, op1, op2, op3);
         if ((isNumber(op1) || isSymbol(op1)) && op2.empty() && op3.empty()) {
-            if (BIT == "J") {
+            if (mnemonic == "J") {
                 SetOP(machine_code, 0b000010);
             } else {
                 SetOP(machine_code, 0b000011);
@@ -41,10 +41,10 @@ MachineCode J_FormatInstruction(const std::string& BIT,
                     SymbolRef{machine_code_it, cur_instruction});
             }
         } else {
-            throw std::runtime_error("Invalid operation (" + BIT + ").");
+            throw std::runtime_error("Invalid operation (" + mnemonic + ").");
         }
     } else {
-        throw std::runtime_error("Unkonw instruction: " + BIT + ".");
+        throw std::runtime_error("Unkonw instruction: " + mnemonic + ".");
     }
     return machine_code;
 }

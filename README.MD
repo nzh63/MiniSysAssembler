@@ -41,7 +41,7 @@ MiniSysAssembler.exe C:\mycode.asm D:\
 
 1. 目前不支持自定义段起始地址，换言之`.data 0x0`将会报错，请使用`.data`。
 2. 目前不支持在数据段内写汇编指令，也不支持在代码段内定义数据。
-3. 数据类型仅支持`.word`。
+3. 数据类型仅支持`.byte`、`.half`、`.word`。
 
 ## TODO
 

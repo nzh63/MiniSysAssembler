@@ -17,7 +17,7 @@
 #pragma once
 extern std::regex J_format_regex;
 
-MachineCode J_FormatInstruction(const std::string& BIT,
+MachineCode J_FormatInstruction(const std::string& mnemonic,
                                 const std::string& assembly,
                                 UnsolvedSymbolMap& unsolved_symbol_map,
                                 MachineCodeHandle machine_code_it);

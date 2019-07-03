@@ -19,7 +19,7 @@
 std::regex I_format_regex("^(addiu?|andi|x?ori|lui|[ls]w|beq|bne|sltiu?)\\s",
                           std::regex::icase);
 
-MachineCode I_FormatInstruction(const std::string& BIT,
+MachineCode I_FormatInstruction(const std::string& mnemonic,
                                 const std::string& assembly,
                                 UnsolvedSymbolMap& unsolved_symbol_map,
                                 MachineCodeHandle machine_code_it) {
@@ -28,7 +28,7 @@ MachineCode I_FormatInstruction(const std::string& BIT,
     std::string op1, op2, op3;
     GetOperand(assembly, op1, op2, op3);
 
-    if (BIT == "LW" || BIT == "SW") {  // LW和SW比较特别，拿出来单独写
+    if (mnemonic == "LW" || mnemonic == "SW") {  // LW和SW比较特别，拿出来单独写
         static std::regex re(
             "\\s*\\S+\\s*(\\S+)\\s*,\\s*(\\S+)\\s*\\(\\s*(\\S+)\\)",
             std::regex::icase);
@@ -39,7 +39,7 @@ MachineCode I_FormatInstruction(const std::string& BIT,
                         op2 = match[3].str();
             if (isRegister(op1) && isRegister(op2) &&
                 (isNumber(offect) || isSymbol(offect))) {
-                if (BIT == "LW") {
+                if (mnemonic == "LW") {
                     SetOP(machine_code, 0b100011);
                 } else {
                     SetOP(machine_code, 0b101011);
@@ -61,9 +61,9 @@ MachineCode I_FormatInstruction(const std::string& BIT,
         } else {
         err:
             if (isI_Format(assembly)) {
-                throw std::runtime_error("Invalid operation (" + BIT + ").");
+                throw std::runtime_error("Invalid operation (" + mnemonic + ").");
             } else {
-                throw std::runtime_error("Unkonw instruction: " + BIT + ".");
+                throw std::runtime_error("Unkonw instruction: " + mnemonic + ".");
             }
         }
     } else {
@@ -71,13 +71,13 @@ MachineCode I_FormatInstruction(const std::string& BIT,
             {"ADDI", 0b001000}, {"ADDIU", 0b001001}, {"ANDI", 0b001100},
             {"ORI", 0b001101},  {"XORI", 0b001110},  {"BEQ", 0b000100},
             {"BNE", 0b000101},  {"SLTI", 0b001010},  {"SLTIU", 0b001011}};
-        auto it = op.find(BIT);
+        auto it = op.find(mnemonic);
         if (it != op.end() && isRegister(op1) && isRegister(op2) &&
             (isNumber(op3) || isSymbol(op3))) {
-            if (BIT == "BEQ" || BIT == "BNE") {
+            if (mnemonic == "BEQ" || mnemonic == "BNE") {
                 std::swap(op1, op2);
             }
-            SetOP(machine_code, op.at(BIT));
+            SetOP(machine_code, op.at(mnemonic));
             SetRS(machine_code, Register(op2));
             SetRT(machine_code, Register(op1));
             if (isNumber(op3)) {
@@ -88,7 +88,7 @@ MachineCode I_FormatInstruction(const std::string& BIT,
                 unsolved_symbol_map[op3].push_back(
                     SymbolRef{machine_code_it, cur_instruction});
             }
-        } else if (BIT == "LUI" && isRegister(op1) &&
+        } else if (mnemonic == "LUI" && isRegister(op1) &&
                    (isNumber(op2) || isSymbol(op2)) && op3.empty()) {
             SetOP(machine_code, 0b001111);
             SetRS(machine_code, 0);
@@ -102,9 +102,9 @@ MachineCode I_FormatInstruction(const std::string& BIT,
             }
         } else {
             if (isI_Format(assembly)) {
-                throw std::runtime_error("Invalid operation (" + BIT + ").");
+                throw std::runtime_error("Invalid operation (" + mnemonic + ").");
             } else {
-                throw std::runtime_error("Unkonw instruction: " + BIT + ".");
+                throw std::runtime_error("Unkonw instruction: " + mnemonic + ".");
             }
         }
     }

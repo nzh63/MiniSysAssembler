@@ -109,31 +109,51 @@ void ProcessInstruction(const std::string& assembly, Instruction& instruction,
 void ProcessData(const std::string& assembly, Data& data,
                  UnsolvedSymbolMap& unsolved_symbol_map) {
     if (assembly != "") {
-        std::regex re(R"(^\.(WORD)\s+(.+)$)", std::regex::icase);
+        std::regex re(R"(^\.(BYTE|HALF|WORD)\s+(.+)$)", std::regex::icase);
         std::cmatch m;
         std::regex_search(assembly.c_str(), m, re);
         if (!m.empty()) {
-            if (m[1].str() == "WORD") {
+            const std::string type = m[1].str();
+            if (type == "BYTE" || type == "HALF" || type == "WORD") {
                 std::string datastr = m[2].str();
-                std::regex re(R"(^(\S+)(?:\s*,\s*)?(.+?)?$)", std::regex::icase);
+                std::regex re(R"(^(\S+?)(?:\s*,\s*))",
+                              std::regex::icase);
                 do {
                     std::regex_search(datastr.c_str(), m, re);
-                    if (!isNumber(m[1].str())) {
-                        if (isSymbol(m[1].str()))
+                    std::string cur_data_str;
+                    if (m.empty()) {
+                        cur_data_str = datastr;
+                        datastr = "";
+                    } else {
+                        cur_data_str = m[1].str();
+                        datastr = m.suffix();
+                    }
+                    if (!isNumber(cur_data_str)) {
+                        if (isSymbol(cur_data_str))
                             throw std::runtime_error(
                                 "Need a number. Current version does support "
                                 "using symbol in data segment.");
                         else
                             throw std::runtime_error("Need a number.");
                     }
-                    std::uint32_t d = toNumber(m[1].str());
-                    data.raw_data.push_back(d & 0xff);
-                    data.raw_data.push_back((d >> 8) & 0xff);
-                    data.raw_data.push_back((d >> 16) & 0xff);
-                    data.raw_data.push_back(d >> 24);
-                    cur_address += 4;
-                    datastr = m[2].str();
-                } while (m[2].matched);
+                    std::uint32_t d = toNumber(cur_data_str);
+                    if (type == "BYTE") {
+                        data.raw_data.push_back(d & 0xff);
+                        cur_address += 1;
+                    } else if (type == "HALF") {
+                        data.raw_data.push_back(d & 0xff);
+                        data.raw_data.push_back((d >> 8) & 0xff);
+                        cur_address += 2;
+                    } else if (type == "WORD") {
+                        data.raw_data.push_back(d & 0xff);
+                        data.raw_data.push_back((d >> 8) & 0xff);
+                        data.raw_data.push_back((d >> 16) & 0xff);
+                        data.raw_data.push_back(d >> 24);
+                        cur_address += 4;
+                    } else {
+                        throw std::runtime_error("Unkonw error.");
+                    }
+                } while (datastr != "");
             } else {
                 throw std::runtime_error("Unkonw error.");
             }
