@@ -31,6 +31,12 @@ MachineCode Macro_FormatInstruction(const std::string& mnemonic,
             if (isRegister(op1) && isRegister(op2)) {
                 R_FormatInstruction("OR", "OR " + op1 + ", $0, " + op2,
                                     unsolved_symbol_map, machine_code_it);
+            }  else if (isRegister(op1) && isMemory(op2)) {
+                I_FormatInstruction("LW", "LW " + op1 + ", " + op2,
+                                    unsolved_symbol_map, machine_code_it);
+            } else if (isMemory(op1) && isRegister(op2)) {
+                I_FormatInstruction("SW", "SW " + op2 + ", " + op1,
+                                    unsolved_symbol_map, machine_code_it);
             } else if (isRegister(op1) && (isNumber(op2) || isSymbol(op2))) {
                 // 偏移量最多为64K，因此符号一定是个16位数
                 bool is_large_num =
@@ -52,6 +58,8 @@ MachineCode Macro_FormatInstruction(const std::string& mnemonic,
                     I_FormatInstruction("ORI", "ORI " + op1 + ", $0, " + op2,
                                         unsolved_symbol_map, machine_code_it);
                 }
+            } else {
+                goto err;
             }
         }
     } else if (mnemonic == "PUSH") {
@@ -77,6 +85,7 @@ MachineCode Macro_FormatInstruction(const std::string& mnemonic,
             throw std::runtime_error("Invalid operation (" + mnemonic + ").");
         }
     } else {
+    err:
         if (isMacro_Format(assembly)) {
             throw std::runtime_error("Invalid operation (" + mnemonic + ").");
         } else {

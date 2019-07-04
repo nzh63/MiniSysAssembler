@@ -54,3 +54,15 @@ unsigned toUNumber(const std::string& str, bool enable_hex) {
 bool isSymbol(const std::string& str) {
     return !str.empty() && !isPositive(str.substr(0, 1));
 }
+
+bool isMemory(const std::string& str) {
+    std::regex re(R"(^\s*(\S+)\((\S+)\)\s*$)", std::regex::icase);
+    std::cmatch m;
+    std::regex_search(str.c_str(), m, re);
+    if (!m.empty() && (isNumber(m[1].str()) || isSymbol(m[1].str())) &&
+        isRegister(m[2].str())) {
+        return true;
+    } else {
+        return false;
+	}
+}
