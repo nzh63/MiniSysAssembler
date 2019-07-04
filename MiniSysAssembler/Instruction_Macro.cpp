@@ -64,7 +64,7 @@ MachineCode Macro_FormatInstruction(const std::string& mnemonic,
         }
     } else if (mnemonic == "PUSH") {
         if (isRegister(op1) && op2.empty() && op3.empty()) {
-            I_FormatInstruction("ADDI", "ADDI " + op1 + ", " + op1 + ", -4",
+            I_FormatInstruction("ADDI", "ADDI $sp, $sp, -4",
                                 unsolved_symbol_map, machine_code_it);
             MachineCodeHandle new_handel = NewMachineCode(*cur_instruction);
             I_FormatInstruction("SW", "SW " + op1 + ", 0($sp)",
@@ -78,7 +78,7 @@ MachineCode Macro_FormatInstruction(const std::string& mnemonic,
             I_FormatInstruction("LW", "LW " + op1 + ", 0($sp)",
                                 unsolved_symbol_map, machine_code_it);
             MachineCodeHandle new_handel = NewMachineCode(*cur_instruction);
-            I_FormatInstruction("ADDI", "ADDI " + op1 + ", " + op1 + ", 4",
+            I_FormatInstruction("ADDI", "ADDI $sp, $sp, 4",
                                 unsolved_symbol_map, new_handel);
             cur_address += 4;
         } else {
