@@ -32,9 +32,7 @@ MachineCode Macro_FormatInstruction(const std::string& mnemonic,
                 R_FormatInstruction("OR", "OR " + op1 + ", $0, " + op2,
                                     unsolved_symbol_map, machine_code_it);
             } else if (isRegister(op1) && (isNumber(op2) || isSymbol(op2))) {
-                if (isSymbol(op2)) {
-                    Warning("Using symbol in MOV may cause error.");
-                }
+                // 偏移量最多为64K，因此符号一定是个16位数
                 bool is_large_num =
                     (!isSymbol(op2)) && (toUNumber(op2) > 0xffff);
                 if (is_large_num) {
@@ -61,7 +59,7 @@ MachineCode Macro_FormatInstruction(const std::string& mnemonic,
             I_FormatInstruction("ADDI", "ADDI " + op1 + ", " + op1 + ", -4",
                                 unsolved_symbol_map, machine_code_it);
             MachineCodeHandle new_handel = NewMachineCode(*cur_instruction);
-            I_FormatInstruction("SW", "SW " + op1 + ", 4($sp)",
+            I_FormatInstruction("SW", "SW " + op1 + ", 0($sp)",
                                 unsolved_symbol_map, new_handel);
             cur_address += 4;
         } else {
@@ -69,10 +67,10 @@ MachineCode Macro_FormatInstruction(const std::string& mnemonic,
         }
     } else if (mnemonic == "POP") {
         if (isRegister(op1) && op2.empty() && op3.empty()) {
-            I_FormatInstruction("ADDI", "ADDI " + op1 + ", " + op1 + ", 4",
+            I_FormatInstruction("LW", "LW " + op1 + ", 0($sp)",
                                 unsolved_symbol_map, machine_code_it);
             MachineCodeHandle new_handel = NewMachineCode(*cur_instruction);
-            I_FormatInstruction("LW", "LW " + op1 + ", 0($sp)",
+            I_FormatInstruction("ADDI", "ADDI " + op1 + ", " + op1 + ", 4",
                                 unsolved_symbol_map, new_handel);
             cur_address += 4;
         } else {
