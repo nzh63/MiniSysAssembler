@@ -13,9 +13,9 @@ J型：J JAL
 
 MOV
 
-> MOV Register Register/Memory/Immediate
+> MOV Register, Register/Memory/Immediate
 >
-> MOV Memory Register
+> MOV Memory, Register
 
 PUSH
 
@@ -24,6 +24,22 @@ PUSH
 POP
 
 > POP Register
+
+<details>
+<summary>宏语句细节</summary>
+
+|                          宏语句                          |                                展开为                                 |
+| :------------------------------------------------------: | :-------------------------------------------------------------------: |
+|                 MOV Register1, Register2                 |                      OR Register1, $0, Register2                      |
+| MOV Register, Memory<br>(MOV Register, Offset(Register)) |                     LW Register, Offset(Register)                     |
+| MOV Memory, Register<br>(MOV Offset(Register), Register) |                     SW Register, Offset(Register)                     |
+|     MOV Register, Immediate<br>(Immediate < 0x10000)     |                      ORI Register, $0, Immediate                      |
+|    MOV Register, Immediate<br>(Immediate >= 0x10000)     | LUI Register, Immediate >> 16<br>ORI Register, $0, Immediate & 0xffff |
+|                      PUSH Register                       |               ADDI \$SP, \$SP, -4<br>SW Register, 0(\$SP)                |
+|                       POP Register                       |                ADDI \$SP, \$SP, 4<br>LW Register, 0(\$SP)                |
+</details>
+
+
 
 ## 用法
 
