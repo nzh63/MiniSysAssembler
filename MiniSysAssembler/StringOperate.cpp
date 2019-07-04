@@ -52,7 +52,14 @@ unsigned toUNumber(const std::string& str, bool enable_hex) {
 }
 
 bool isSymbol(const std::string& str) {
-    return !str.empty() && !isPositive(str.substr(0, 1));
+    if (str.empty()) {
+        return false;
+    } else {
+        std::regex re(R"(^[a-z0-9_.$]+$)", std::regex::icase);
+        std::cmatch m;
+        std::regex_search(str.c_str(), m, re);
+        return !m.empty() && !isPositive(str.substr(0, 1));
+	}
 }
 
 bool isMemory(const std::string& str) {
