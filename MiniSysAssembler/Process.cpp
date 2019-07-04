@@ -116,17 +116,20 @@ void ProcessData(const std::string& assembly, Data& data,
             const std::string type = m[1].str();
             if (type == "BYTE" || type == "HALF" || type == "WORD") {
                 std::string datastr = m[2].str();
-                std::regex re(R"(^(\S+?)(?:\s*,\s*))",
+                std::regex re(R"(^([^:,\s]+)\s*(?:\:\s*([^:,\s]+))?(\s*,\s*)?)",
                               std::regex::icase);
                 do {
                     std::regex_search(datastr.c_str(), m, re);
-                    std::string cur_data_str;
-                    if (m.empty()) {
-                        cur_data_str = datastr;
-                        datastr = "";
-                    } else {
-                        cur_data_str = m[1].str();
-                        datastr = m.suffix();
+                    std::string cur_data_str = m[1].str(),
+                                repeat_time_str = m[2].str();
+                    datastr = m.suffix();
+                    unsigned repeat_time = 1;
+                    if (m[2].matched) {
+                        if (isPositive(repeat_time_str)) {
+                            repeat_time = toUNumber(repeat_time_str);
+                        } else {
+                            throw std::runtime_error("Repeat time error.");
+                        }
                     }
                     if (!isNumber(cur_data_str)) {
                         if (isSymbol(cur_data_str))
@@ -137,21 +140,23 @@ void ProcessData(const std::string& assembly, Data& data,
                             throw std::runtime_error("Need a number.");
                     }
                     std::uint32_t d = toNumber(cur_data_str);
-                    if (type == "BYTE") {
-                        data.raw_data.push_back(d & 0xff);
-                        cur_address += 1;
-                    } else if (type == "HALF") {
-                        data.raw_data.push_back(d & 0xff);
-                        data.raw_data.push_back((d >> 8) & 0xff);
-                        cur_address += 2;
-                    } else if (type == "WORD") {
-                        data.raw_data.push_back(d & 0xff);
-                        data.raw_data.push_back((d >> 8) & 0xff);
-                        data.raw_data.push_back((d >> 16) & 0xff);
-                        data.raw_data.push_back(d >> 24);
-                        cur_address += 4;
-                    } else {
-                        throw std::runtime_error("Unkonw error.");
+                    for (int i = 0; i < repeat_time; i++) {
+                        if (type == "BYTE") {
+                            data.raw_data.push_back(d & 0xff);
+                            cur_address += 1;
+                        } else if (type == "HALF") {
+                            data.raw_data.push_back(d & 0xff);
+                            data.raw_data.push_back((d >> 8) & 0xff);
+                            cur_address += 2;
+                        } else if (type == "WORD") {
+                            data.raw_data.push_back(d & 0xff);
+                            data.raw_data.push_back((d >> 8) & 0xff);
+                            data.raw_data.push_back((d >> 16) & 0xff);
+                            data.raw_data.push_back(d >> 24);
+                            cur_address += 4;
+                        } else {
+                            throw std::runtime_error("Unkonw error.");
+                        }
                     }
                 } while (datastr != "");
             } else {
