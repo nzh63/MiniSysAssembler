@@ -9,6 +9,8 @@ I型：ADDI ADDIU ANDI ORI XORI LUI LW SW BEQ BNE SLTI SLTIU
 
 J型：J JAL
 
+同时亦支持标号的解析。<del>废话，手算偏移量是会死人的。</del>
+
 ### 自带宏语句
 
 MOV
@@ -17,13 +19,39 @@ MOV
 >
 > MOV Memory, Register
 
+<details>
+<summary>例子</summary>
+
+> MOV $1, $2
+>
+> MOV $1, 65535
+>
+> MOV $1, 0xFFFFFFFF
+>
+> MOV $1, ARRAY($0)
+>
+> MOV ARRAY($0), $1
+</details>
+
 PUSH
 
 > PUSH Register
 
+<details>
+<summary>例子</summary>
+
+> PUSH $1
+</details>
+
 POP
 
 > POP Register
+
+<details>
+<summary>例子</summary>
+
+> POP $1
+</details>
 
 <details>
 <summary>宏语句细节</summary>
