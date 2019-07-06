@@ -140,7 +140,7 @@ void ProcessData(const std::string& assembly, Data& data,
                             throw std::runtime_error("Need a number.");
                     }
                     std::uint32_t d = toNumber(cur_data_str);
-                    for (int i = 0; i < repeat_time; i++) {
+                    for (unsigned i = 0; i < repeat_time; i++) {
                         if (type == "BYTE") {
                             data.raw_data.push_back(d & 0xff);
                             cur_address += 1;
