@@ -44,11 +44,17 @@ bool isPositive(const std::string& str) {
 }
 
 int toNumber(const std::string& str, bool enable_hex) {
-    return std::stol(str, 0, 0);
+    if (enable_hex)
+        return std::stol(str, 0, 0);
+    else
+        return std::stol(str, 0, 10);
 }
 
 unsigned toUNumber(const std::string& str, bool enable_hex) {
-    return std::stoul(str, 0, 0);
+    if (enable_hex)
+        return std::stoul(str, 0, 0);
+    else
+        return std::stoul(str, 0, 10);
 }
 
 bool isSymbol(const std::string& str) {
@@ -59,7 +65,7 @@ bool isSymbol(const std::string& str) {
         std::cmatch m;
         std::regex_search(str.c_str(), m, re);
         return !m.empty() && !isPositive(str.substr(0, 1));
-	}
+    }
 }
 
 bool isMemory(const std::string& str) {
@@ -71,5 +77,5 @@ bool isMemory(const std::string& str) {
         return true;
     } else {
         return false;
-	}
+    }
 }

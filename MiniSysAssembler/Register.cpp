@@ -72,15 +72,15 @@ int NameToId(const std::string& str2) {
         return 24;
     } else if (str3 == "T9") {
         return 25;
-    } else if (str3 == "K0") {
+    } else if (str3 == "K0" || str3 == "I0") {
         return 26;
-    } else if (str3 == "K1") {
+    } else if (str3 == "K1" || str3 == "I1") {
         return 27;
-    } else if (str3 == "GP") {
+    } else if (str3 == "GP" || str3 == "S9") {
         return 28;
     } else if (str3 == "SP") {
         return 29;
-    } else if (str3 == "FP") {
+    } else if (str3 == "FP" || str3 == "S8") {
         return 30;
     } else if (str3 == "RA") {
         return 31;
