@@ -23,6 +23,7 @@ struct Instruction {
     std::string assembly, file;
     int line;
     int address;
+    bool done = false;
     std::vector<MachineCode> machine_code;
 };
 

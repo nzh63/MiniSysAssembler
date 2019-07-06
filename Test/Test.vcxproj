@@ -164,6 +164,11 @@
       <Project>{7f3d69bc-b9d4-402f-a7b2-da4c9a295d8f}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="TestData\CorrectAnswer\dmem32.coe" />
+    <None Include="TestData\CorrectAnswer\prgmip32.coe" />
+    <None Include="TestData\test.asm" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

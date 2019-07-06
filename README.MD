@@ -15,21 +15,16 @@ J型：J JAL
 
 MOV
 
-> MOV Register, Register/Memory/Immediate
->
+> MOV Register, Register/Memory/Immediate<br>
 > MOV Memory, Register
 
 <details>
 <summary>例子</summary>
 
-> MOV $1, $2
->
-> MOV $1, 65535
->
-> MOV $1, 0xFFFFFFFF
->
-> MOV $1, ARRAY($0)
->
+> MOV $1, $2<br>
+> MOV $1, 65535<br>
+> MOV $1, 0xFFFFFFFF<br>
+> MOV $1, ARRAY($0)<br>
 > MOV ARRAY($0), $1
 </details>
 
@@ -63,8 +58,8 @@ POP
 | MOV Memory, Register<br>(MOV Offset(Register), Register) |                     SW Register, Offset(Register)                     |
 |     MOV Register, Immediate<br>(Immediate < 0x10000)     |                      ORI Register, $0, Immediate                      |
 |    MOV Register, Immediate<br>(Immediate >= 0x10000)     | LUI Register, Immediate >> 16<br>ORI Register, $0, Immediate & 0xffff |
-|                      PUSH Register                       |               ADDI \$SP, \$SP, -4<br>SW Register, 0(\$SP)                |
-|                       POP Register                       |                ADDI \$SP, \$SP, 4<br>LW Register, 0(\$SP)                |
+|                      PUSH Register                       |              ADDI \$SP, \$SP, -4<br>SW Register, 0(\$SP)              |
+|                       POP Register                       |              ADDI \$SP, \$SP, 4<br>LW Register, 0(\$SP)               |
 </details>
 
 
@@ -85,9 +80,8 @@ MiniSysAssembler.exe C:\mycode.asm D:\
 
 ## Known Issue
 
-1. 目前不支持自定义段起始地址，换言之`.data 0x0`将会报错，请使用`.data`。
-2. 目前不支持在数据段内写汇编指令，也不支持在代码段内定义数据。
-3. 数据类型仅支持`.byte`、`.half`、`.word`。
+1. 目前不支持在数据段内写汇编指令，也不支持在代码段内定义数据。
+2. 数据类型仅支持`.byte`、`.half`、`.word`。
 
 ## TODO
 

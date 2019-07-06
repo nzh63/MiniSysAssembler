@@ -21,6 +21,7 @@ struct Data {
     std::string assembly, file;
     int line;
     int address;
+    bool done = false;
     std::vector<BYTE> raw_data;
 };
 

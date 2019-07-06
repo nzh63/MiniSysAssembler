@@ -29,15 +29,66 @@ int doAssemble(const std::string &input_file_path,
         line++;
         std::string input;
         getline(file, input);
-        std::regex re(R"(^\s*\.(data|text))", std::regex::icase);
+        std::regex re(R"(^\s*\.(data|text)\s*(\S+)?)", std::regex::icase);
         std::cmatch m;
         std::regex_search(input.c_str(), m, re);
+		// 从这一行到91行写得很差，有时间重写一遍
         if (!m.empty()) {
-            state = (toUppercase(m[1].str()) == "DATA") ? data : text;
+            if (toUppercase(m[1].str()) == "DATA") {
+                state = data;
+                if (m[2].matched) {
+                    if (isPositive(m[2].str())) {
+                        unsigned pos = toUNumber(m[2].str());
+                        Data data;
+                        data.file = input_file_path;
+                        data.line = line;
+                        data.assembly = input;
+                        for (unsigned i = 0; i < pos; i++) {
+                            data.raw_data.push_back(0);
+                        }
+                        data.address = 0;
+                        data.done = true;
+                        data_list.push_back(data);
+                    } else {
+                        Msg("Need a number.",
+                            input_file_path + '(' + std::to_string(line) + ')',
+                            LogLevel::error);
+                    }
+                }
+            } else {
+                state = text;
+                if (m[2].matched) {
+                    if (isPositive(m[2].str())) {
+                        unsigned pos = toUNumber(m[2].str());
+                        if (pos % 4 != 0) {
+                            Msg("DWORD-aligned error.",
+                                input_file_path + '(' + std::to_string(line) +
+                                    ')',
+                                LogLevel::error);
+                        }
+                        Instruction instruction;
+                        instruction.file = input_file_path;
+                        instruction.line = line;
+                        instruction.assembly = input;
+                        for (unsigned i = 0; i < pos / 4; i++) {
+                            instruction.machine_code.push_back(0x34000000);
+                        }
+                        instruction.address = 0;
+                        instruction.done = true;
+                        instruction_list.push_back(instruction);
+                    } else {
+                        Msg("Need a number.",
+                            input_file_path + '(' + std::to_string(line) + ')',
+                            LogLevel::error);
+                    }
+                }
+            }
             continue;
         }
         if (state == global) {
-            throw std::runtime_error("Need a segment.");
+            Msg("Need a segment.",
+                input_file_path + '(' + std::to_string(line) + ')',
+                LogLevel::error);
         } else if (state == text) {
             Instruction instruction;
             instruction.file = input_file_path;
@@ -45,11 +96,11 @@ int doAssemble(const std::string &input_file_path,
             instruction.assembly = input;
             instruction_list.push_back(instruction);
         } else if (state == data) {
-            Data instruction;
-            instruction.file = input_file_path;
-            instruction.line = line;
-            instruction.assembly = input;
-            data_list.push_back(instruction);
+            Data data;
+            data.file = input_file_path;
+            data.line = line;
+            data.assembly = input;
+            data_list.push_back(data);
         }
     }
     file.close();

@@ -25,6 +25,11 @@ int GeneratedMachineCode(InstructionList& instruction_list,
     unsigned int address = 0;
     cur_address = 0;
     for (auto& instruction : instruction_list) {
+        if (instruction.done) {
+            address = cur_address =
+                instruction.address + 4 * instruction.machine_code.size();
+            continue;
+        }
         assert(instruction.machine_code.size() == 0);
         cur_instruction = &instruction;
         // 去除标号及注释，标号加入符号表中，返回的汇编无空白前缀
@@ -41,6 +46,7 @@ int GeneratedMachineCode(InstructionList& instruction_list,
             }
             address = cur_address;
         }
+        instruction.done = true;
         cur_instruction = nullptr;
     }
     return 0;
@@ -52,6 +58,10 @@ int GeneratedDataSegment(DataList& data_list,
     unsigned int address = 0;
     cur_address = 0;
     for (auto& data : data_list) {
+        if (data.done) {
+            address = cur_address = data.address + data.raw_data.size();
+            continue;
+        }
         assert(data.raw_data.size() == 0);
         cur_instruction = (Instruction*)&data;
         std::string assembly =
@@ -68,6 +78,7 @@ int GeneratedDataSegment(DataList& data_list,
 
             address = cur_address;
         }
+        data.done = true;
     }
     return 0;
 }
