@@ -21,8 +21,8 @@ using MachineCodeHandle = std::vector<MachineCode>::iterator;
 
 struct Instruction {
     std::string assembly, file;
-    int line;
-    int address;
+    unsigned line;
+    unsigned address;
     bool done = false;
     std::vector<MachineCode> machine_code;
 };

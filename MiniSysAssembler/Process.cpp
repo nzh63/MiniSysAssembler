@@ -17,7 +17,7 @@
 #include "pch.h"
 
 Instruction* cur_instruction = nullptr;
-int cur_address = 0;
+unsigned cur_address = 0;
 
 int GeneratedMachineCode(InstructionList& instruction_list,
                          UnsolvedSymbolMap& unsolved_symbol_map,

@@ -31,4 +31,4 @@ int SolveSymbol(UnsolvedSymbolMap& unsolved_symbol_map,
                 const SymbolMap& symbol_map);
 
 extern Instruction* cur_instruction;
-extern int cur_address;
+extern unsigned cur_address;

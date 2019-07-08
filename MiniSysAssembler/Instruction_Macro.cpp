@@ -21,7 +21,7 @@ std::regex Macro_format_regex("^(mov|push|pop)\\s", std::regex::icase);
 MachineCode Macro_FormatInstruction(const std::string& mnemonic,
                                     const std::string& assembly,
                                     UnsolvedSymbolMap& unsolved_symbol_map,
-                                    MachineCodeHandle machine_code_it) {
+                                    MachineCodeHandle& machine_code_it) {
     std::string op1, op2, op3;
     GetOperand(assembly, op1, op2, op3);
     if (mnemonic == "MOV") {
@@ -43,12 +43,13 @@ MachineCode Macro_FormatInstruction(const std::string& mnemonic,
                     (!isSymbol(op2)) && (toUNumber(op2) > 0xffff);
                 if (is_large_num) {
                     unsigned number = toUNumber(op2);
+                    MachineCodeHandle new_handel =
+                        NewMachineCode(*cur_instruction);
+                    machine_code_it = cur_instruction->machine_code.begin();
                     I_FormatInstruction(
                         "LUI",
                         "LUI " + op1 + ", " + std::to_string(number >> 16),
                         unsolved_symbol_map, machine_code_it);
-                    MachineCodeHandle new_handel =
-                        NewMachineCode(*cur_instruction);
                     I_FormatInstruction("ORI",
                                         "ORI " + op1 + ", " + op1 + ", " +
                                             std::to_string(number % 0x10000),
@@ -64,9 +65,10 @@ MachineCode Macro_FormatInstruction(const std::string& mnemonic,
         }
     } else if (mnemonic == "PUSH") {
         if (isRegister(op1) && op2.empty() && op3.empty()) {
+            MachineCodeHandle new_handel = NewMachineCode(*cur_instruction);
+            machine_code_it = cur_instruction->machine_code.begin();
             I_FormatInstruction("ADDI", "ADDI $sp, $sp, -4",
                                 unsolved_symbol_map, machine_code_it);
-            MachineCodeHandle new_handel = NewMachineCode(*cur_instruction);
             I_FormatInstruction("SW", "SW " + op1 + ", 0($sp)",
                                 unsolved_symbol_map, new_handel);
             cur_address += 4;
@@ -75,9 +77,10 @@ MachineCode Macro_FormatInstruction(const std::string& mnemonic,
         }
     } else if (mnemonic == "POP") {
         if (isRegister(op1) && op2.empty() && op3.empty()) {
+            MachineCodeHandle new_handel = NewMachineCode(*cur_instruction);
+            machine_code_it = cur_instruction->machine_code.begin();
             I_FormatInstruction("LW", "LW " + op1 + ", 0($sp)",
                                 unsolved_symbol_map, machine_code_it);
-            MachineCodeHandle new_handel = NewMachineCode(*cur_instruction);
             I_FormatInstruction("ADDI", "ADDI $sp, $sp, 4",
                                 unsolved_symbol_map, new_handel);
             cur_address += 4;
