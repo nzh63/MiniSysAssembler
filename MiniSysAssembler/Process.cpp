@@ -186,8 +186,12 @@ std::string ProcessLabel(unsigned int address, const std::string& assembly,
     std::smatch match;
     std::regex_match(assembly, match, re);
     if (match[1].matched) {
-        std::string label = match[1].str();
-        symbol_map[toUppercase(label)] = address;
+        std::string label = toUppercase(match[1].str());
+        if (symbol_map.find(label) != symbol_map.end()) {
+            throw std::runtime_error("Redefine symbol:" + label);
+        } else {
+            symbol_map[label] = address;
+        }
     }
     return match[2].str();
 }
