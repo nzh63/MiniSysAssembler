@@ -182,7 +182,7 @@ void ProcessData(const std::string& assembly, Data& data,
 }
 std::string ProcessLabel(unsigned int address, const std::string& assembly,
                          SymbolMap& symbol_map) {
-    static std::regex re("\\s*(?:(.+?):)?\\s*(.*?)\\s*(?:#.*)?");
+    static std::regex re("\\s*(?:(\\S+?)\\s*:)?\\s*(.*?)\\s*(?:#.*)?");
     std::smatch match;
     std::regex_match(assembly, match, re);
     if (match[1].matched) {

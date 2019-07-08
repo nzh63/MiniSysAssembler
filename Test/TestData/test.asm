@@ -1,14 +1,15 @@
-.data
+.data 0x0
     AAA:    .word   0x3F9409, -6:6
     BBB:    .word   0x123  :  3
-            .half   0x456, 3
+            .half   0x456, 3:7
             .byte   -9, 10, 11, 12
     XXX:    .word   0x1, 0x999
     YYY:    .word   123
     ZZZ:    .word   0
             .word   16
-.text
+.text 0x0
 start:
+    ori     $0, $0, 0
     mov     $1, AAA($0)
     lw      $1, AAA($0)
     mov     AAA($0), $1
