@@ -16,4 +16,5 @@
 
 #pragma once
 int doAssemble(const std::string &input_file_path,
-               const std::string &output_folder_path = "./");
+               const std::string &output_folder_path = "./",
+               unsigned options = 0);

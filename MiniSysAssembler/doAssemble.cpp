@@ -17,7 +17,7 @@
 #include "pch.h"
 
 int doAssemble(const std::string &input_file_path,
-               const std::string &output_folder_path) {
+               const std::string &output_folder_path, unsigned options) {
     std::fstream file;
     file.open(input_file_path, std::ios_base::in);
     InstructionList instruction_list;
@@ -29,10 +29,11 @@ int doAssemble(const std::string &input_file_path,
         line++;
         std::string input;
         getline(file, input);
+        input = KillComment(input);
         std::regex re(R"(^\s*\.(data|text)\s*(\S+)?)", std::regex::icase);
         std::cmatch m;
-        std::regex_search(KillComment(input).c_str(), m, re);
-		// 从这一行到91行写得很差，有时间重写一遍
+        std::regex_search(input.c_str(), m, re);
+        // 从这一行到91行写得很差，有时间重写一遍
         if (!m.empty()) {
             if (toUppercase(m[1].str()) == "DATA") {
                 state = data;
@@ -53,6 +54,7 @@ int doAssemble(const std::string &input_file_path,
                         Msg("Need a number.",
                             input_file_path + '(' + std::to_string(line) + ')',
                             LogLevel::error);
+                        return 1;
                     }
                 }
             } else {
@@ -65,6 +67,7 @@ int doAssemble(const std::string &input_file_path,
                                 input_file_path + '(' + std::to_string(line) +
                                     ')',
                                 LogLevel::error);
+                            return 1;
                         }
                         Instruction instruction;
                         instruction.file = input_file_path;
@@ -80,6 +83,7 @@ int doAssemble(const std::string &input_file_path,
                         Msg("Need a number.",
                             input_file_path + '(' + std::to_string(line) + ')',
                             LogLevel::error);
+                        return 1;
                     }
                 }
             }
@@ -89,6 +93,7 @@ int doAssemble(const std::string &input_file_path,
             Msg("Need a segment.",
                 input_file_path + '(' + std::to_string(line) + ')',
                 LogLevel::error);
+            return 1;
         } else if (state == text) {
             Instruction instruction;
             instruction.file = input_file_path;
@@ -133,5 +138,12 @@ int doAssemble(const std::string &input_file_path,
     }
     file.close();
 
+    if (options | allow_options.at("--show-details")) {
+        file.open(output_folder_path + "details.txt", std::ios_base::out);
+        if (file.is_open()) {
+            ShowDetails(instruction_list, data_list, file);
+        }
+        file.close();
+    }
     return 0;
 }

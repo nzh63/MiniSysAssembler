@@ -17,15 +17,23 @@
 #include "pch.h"
 
 void ShowAboutMessage(std::ostream& out) {
-	out << R"(A simple MiniSys-1 assembler
+    out << R"(A simple MiniSys-1 assembler
 Copyright (c) 2019 nzh63, All Rights Reserved.
 )";
 }
 void ShowHelpMessage(std::ostream& out) {
-	ShowAboutMessage(out);
-	out << R"(
-Useage: MiniSysAssembler.exe input_file_path [output_folder_path]
+    ShowAboutMessage(out);
+    out << R"(
+Useage: MiniSysAssembler.exe [option] input_file_path [output_folder_path]
+
+Options:
+    --help              Show help message.
+    --show-details      Output details.txt for details.
+
 Eg:  MiniSysAssembler.exe C:\mycode.asm
 
 )";
 }
+
+std::unordered_map<std::string, unsigned> allow_options{{"--help", 0},
+                                                        {"--show-details", 1}};

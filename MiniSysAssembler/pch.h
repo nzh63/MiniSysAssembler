@@ -15,6 +15,7 @@
  */
 
 #pragma once
+#include <bitset>
 #include <cassert>
 #include <cstdint>
 #include <fstream>
@@ -33,5 +34,6 @@
 #include "Output.h"
 #include "Process.h"
 #include "Register.h"
+#include "ShowDetails.h"
 #include "StringOperate.h"
 #include "doAssemble.h"

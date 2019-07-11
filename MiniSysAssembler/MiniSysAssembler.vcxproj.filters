@@ -57,6 +57,9 @@
     <ClCompile Include="Console.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ShowDetails.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Register.h">
@@ -99,6 +102,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Console.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ShowDetails.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -17,3 +17,5 @@
 #pragma once
 void ShowAboutMessage(std::ostream& out = std::cerr);
 void ShowHelpMessage(std::ostream& out = std::cerr);
+
+extern std::unordered_map<std::string, unsigned> allow_options;

@@ -17,11 +17,30 @@
 #include "pch.h"
 
 int main(int argc, char* argv[]) {
-    if (argc == 1) {
+    if (argc == 1 || std::string(argv[1]) == "--help") {
         ShowHelpMessage();
-    } else if (argc == 2) {
-        doAssemble(argv[1]);
     } else {
-        doAssemble(argv[1], argv[2]);
+        std::string asm_path, out_path = "./";
+        unsigned parameters = 0, fill_parameters = 0;
+        for (int i = 1; i < argc; i++) {
+            if (allow_options.find(argv[i]) != allow_options.end()) {
+                parameters |= allow_options.at(argv[i]);
+            } else {
+                if (fill_parameters > 2 || argv[i][0] == '-') {
+                    std::cerr << "Bad option " << argv[i] << ". Type "
+                              << argv[0] << " --help for useage.";
+                } else if (fill_parameters == 0) {
+                    fill_parameters++;
+                    asm_path = argv[i];
+                } else {
+                    fill_parameters++;
+                    out_path = argv[i];
+                    if (out_path.back() != '/' && out_path.back() != '\\') {
+                        out_path.push_back('/');
+					}
+                }
+            }
+        }
+        doAssemble(asm_path, out_path, parameters);
     }
 }
