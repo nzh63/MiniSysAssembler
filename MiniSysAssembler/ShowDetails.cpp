@@ -2,28 +2,28 @@
 
 void ShowDetails(InstructionList instruction_list, DataList data_list,
                  std::ostream& out) {
-    out << "Code Segment\n";
+    out << "Code Segment\n          Machine code\nOffset    hex       bin    "
+           "                         \tassembly\n";
     for (const Instruction& instruction : instruction_list) {
-        out << '#' << instruction.assembly << '\n'
-            << "Offset:\n\t" << std::setw(8)
-            << std::setfill('0') << instruction.address << '\n'
-            << "Machine code:\n";
+        auto offset = instruction.address;
         for (const auto machine_code : instruction.machine_code) {
-            out << std::hex << '\t' << machine_code << '\t'
-                << std::bitset<32>(machine_code) << '\n';
+            out << std::hex << std::setw(8) << std::setfill('0') << offset
+                << "  " << std::setw(8) << std::setfill('0') << machine_code
+                << "  " << std::bitset<32>(machine_code) << "\t"
+                << instruction.assembly << '\n';
+            offset += 4;
         }
-        out << '\n';
     }
-    out << "\nData Segment\n";
+    out << "\nData Segment\n          Raw data\nOffset    hex bin     "
+           "\tassembly\n";
     for (const Data& data : data_list) {
-        out << '#' << data.assembly << '\n'
-            << "Offset:\n\t" <<
-            std::setw(8) << std::setfill('0') << data.address << '\\n'
-            << "Raw data:\n";
+        auto offset = data.address;
         for (const auto raw_data : data.raw_data) {
-            out << std::hex << '\t' << raw_data << '\t'
-                << std::bitset<8>(raw_data) << '\n';
+            out << std::hex << std::setw(8) << std::setfill('0') << offset
+                << "  " << std::setw(2) << std::setfill('0')
+                << (unsigned)raw_data << "  " << std::bitset<8>(raw_data)
+                << "\t" << data.assembly << '\n';
+            offset += 1;
         }
-        out << '\n';
     }
 }
