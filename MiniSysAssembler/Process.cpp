@@ -184,7 +184,8 @@ std::string ProcessLabel(unsigned int address, const std::string& assembly,
                          SymbolMap& symbol_map) {
     static std::regex re("\\s*(?:(\\S+?)\\s*:)?\\s*(.*?)\\s*(?:#.*)?");
     std::smatch match;
-    std::regex_match(assembly, match, re);
+    std::string assembly2 = KillComment(assembly);
+    std::regex_match(assembly2, match, re);
     if (match[1].matched) {
         std::string label = toUppercase(match[1].str());
         if (symbol_map.find(label) != symbol_map.end()) {
@@ -194,6 +195,13 @@ std::string ProcessLabel(unsigned int address, const std::string& assembly,
         }
     }
     return match[2].str();
+}
+
+std::string KillComment(const std::string& assembly) {
+    static std::regex re("^([^#]*)(?:#.*)?");
+    std::smatch match;
+    std::regex_match(assembly, match, re);
+    return match[1].str();
 }
 
 int SolveSymbol(UnsolvedSymbolMap& unsolved_symbol_map,

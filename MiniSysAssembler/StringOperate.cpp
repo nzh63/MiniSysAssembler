@@ -44,10 +44,13 @@ bool isPositive(const std::string& str) {
 }
 
 int toNumber(const std::string& str, bool enable_hex) {
-    if (enable_hex)
-        return std::stol(str, 0, 0);
-    else
-        return std::stol(str, 0, 10);
+    int ans;
+    try {
+        ans = std::stol(str, 0, enable_hex ? 0 : 10);
+    } catch (std::out_of_range) {
+        ans = (int)std::stoul(str, 0, enable_hex ? 0 : 10);
+    }
+    return ans;
 }
 
 unsigned toUNumber(const std::string& str, bool enable_hex) {

@@ -27,6 +27,7 @@ void ProcessData(const std::string& assembly, Data& data,
                      UnsolvedSymbolMap& unsolved_symbol_map);
 std::string ProcessLabel(unsigned int address, const std::string& assembly,
                          SymbolMap& symbol_map);
+std::string KillComment(const std::string& assembly);
 int SolveSymbol(UnsolvedSymbolMap& unsolved_symbol_map,
                 const SymbolMap& symbol_map);
 

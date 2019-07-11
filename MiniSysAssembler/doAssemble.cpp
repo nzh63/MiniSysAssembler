@@ -31,7 +31,7 @@ int doAssemble(const std::string &input_file_path,
         getline(file, input);
         std::regex re(R"(^\s*\.(data|text)\s*(\S+)?)", std::regex::icase);
         std::cmatch m;
-        std::regex_search(input.c_str(), m, re);
+        std::regex_search(KillComment(input).c_str(), m, re);
 		// 从这一行到91行写得很差，有时间重写一遍
         if (!m.empty()) {
             if (toUppercase(m[1].str()) == "DATA") {
