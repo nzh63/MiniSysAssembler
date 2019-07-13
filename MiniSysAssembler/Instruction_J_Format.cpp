@@ -16,7 +16,7 @@
 
 #include "pch.h"
 
-std::regex J_format_regex("^(j|jal)\\s", std::regex::icase);
+std::regex J_format_regex("^(j|jal)", std::regex::icase);
 
 MachineCode J_FormatInstruction(const std::string& mnemonic,
                                 const std::string& assembly,
@@ -54,9 +54,10 @@ bool isJ_Format(MachineCode machine_code) {
     return op == 0b000010 || op == 0b000011;
 }
 bool isJ_Format(const std::string& assembly) {
+    std::string mnemonic = GetMnemonic(assembly);
     std::cmatch m;
-    std::regex_search(assembly.c_str(), m, J_format_regex);
-    if (!m.empty()) {
+    std::regex_match(mnemonic.c_str(), m, J_format_regex);
+    if (!m.empty() && m.prefix().str().empty() && m.suffix().str().empty()) {
         return true;
     } else {
         return false;

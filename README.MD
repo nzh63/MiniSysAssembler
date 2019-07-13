@@ -48,6 +48,10 @@ POP
 > POP $1
 </details>
 
+NOP
+
+> NOP
+
 <details>
 <summary>宏语句细节</summary>
 
@@ -60,6 +64,7 @@ POP
 |    MOV Register, Immediate<br>(Immediate >= 0x10000)     | LUI Register, Immediate >> 16<br>ORI Register, $0, Immediate & 0xffff |
 |                      PUSH Register                       |              ADDI \$SP, \$SP, -4<br>SW Register, 0(\$SP)              |
 |                       POP Register                       |              ADDI \$SP, \$SP, 4<br>LW Register, 0(\$SP)               |
+|                           NOP                            |                            SLL \$0, \$0, 0                            |
 </details>
 
 
@@ -87,4 +92,3 @@ MiniSysAssembler.exe C:\mycode.asm D:\
 
 1. 更多的宏语句.
 2. 更友好的错误提示。
-

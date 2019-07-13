@@ -9,6 +9,7 @@
             .word   16
 .text 0x0
 start:
+    nop
     ori     $0, $0, 0
     mov     $1, AAA($0)
     lw      $1, AAA($0)

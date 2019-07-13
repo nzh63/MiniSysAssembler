@@ -16,7 +16,7 @@
 
 #include "pch.h"
 
-std::regex Macro_format_regex("^(mov|push|pop)\\s", std::regex::icase);
+std::regex Macro_format_regex("^(mov|push|pop|nop)", std::regex::icase);
 
 MachineCode Macro_FormatInstruction(const std::string& mnemonic,
                                     const std::string& assembly,
@@ -31,7 +31,7 @@ MachineCode Macro_FormatInstruction(const std::string& mnemonic,
             if (isRegister(op1) && isRegister(op2)) {
                 R_FormatInstruction("OR", "OR " + op1 + ", $0, " + op2,
                                     unsolved_symbol_map, machine_code_it);
-            }  else if (isRegister(op1) && isMemory(op2)) {
+            } else if (isRegister(op1) && isMemory(op2)) {
                 I_FormatInstruction("LW", "LW " + op1 + ", " + op2,
                                     unsolved_symbol_map, machine_code_it);
             } else if (isMemory(op1) && isRegister(op2)) {
@@ -81,12 +81,15 @@ MachineCode Macro_FormatInstruction(const std::string& mnemonic,
             machine_code_it = cur_instruction->machine_code.begin();
             I_FormatInstruction("LW", "LW " + op1 + ", 0($sp)",
                                 unsolved_symbol_map, machine_code_it);
-            I_FormatInstruction("ADDI", "ADDI $sp, $sp, 4",
-                                unsolved_symbol_map, new_handel);
+            I_FormatInstruction("ADDI", "ADDI $sp, $sp, 4", unsolved_symbol_map,
+                                new_handel);
             cur_address += 4;
         } else {
             throw std::runtime_error("Invalid operation (" + mnemonic + ").");
         }
+    } else if (mnemonic == "NOP") {
+        R_FormatInstruction("SLL", "SLL $0, $0, 0",
+                            unsolved_symbol_map, machine_code_it);
     } else {
     err:
         if (isMacro_Format(assembly)) {
@@ -99,9 +102,10 @@ MachineCode Macro_FormatInstruction(const std::string& mnemonic,
 }
 
 bool isMacro_Format(const std::string& assembly) {
+    std::string mnemonic = GetMnemonic(assembly);
     std::cmatch m;
-    std::regex_search(assembly.c_str(), m, Macro_format_regex);
-    if (!m.empty()) {
+    std::regex_match(mnemonic.c_str(), m, Macro_format_regex);
+    if (!m.empty() && m.prefix().str().empty() && m.suffix().str().empty()) {
         return true;
     } else {
         return false;

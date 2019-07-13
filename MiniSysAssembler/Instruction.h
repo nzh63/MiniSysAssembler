@@ -49,10 +49,11 @@ void SetImmediate(MachineCode& machine_code, int immediate);
 void SetImmediate(MachineCode& machine_code, int immediate);
 void SetAddress(MachineCode& machine_code, unsigned address);
 
+std::string GetMnemonic(const std::string& assembly);
 void GetOperand(const std::string& assembly, std::string& op1, std::string& op2,
                 std::string& op3);
 
-#include "Instruction_R_Format.h"
 #include "Instruction_I_Format.h"
 #include "Instruction_J_Format.h"
 #include "Instruction_Macro.h"
+#include "Instruction_R_Format.h"

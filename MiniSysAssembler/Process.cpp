@@ -86,29 +86,25 @@ int GeneratedDataSegment(DataList& data_list,
 void ProcessInstruction(const std::string& assembly, Instruction& instruction,
                         UnsolvedSymbolMap& unsolved_symbol_map) {
     if (assembly != "") {
-        std::cmatch m;
-        if (std::regex_search(assembly.c_str(), m, R_format_regex),
-            !m.empty()) {  // R-format
+        std::string mnemonic = GetMnemonic(assembly);
+        if (isR_Format(mnemonic)) {  // R-format
             MachineCodeHandle handel = NewMachineCode(instruction);
-            R_FormatInstruction(toUppercase(m[1].str()), assembly,
+            R_FormatInstruction(toUppercase(mnemonic), assembly,
                                 unsolved_symbol_map, handel);
             cur_address += 4;
-        } else if (std::regex_search(assembly.c_str(), m, I_format_regex),
-                   !m.empty()) {  // I-format
+        } else if (isI_Format(mnemonic)) {  // I-format
             MachineCodeHandle handel = NewMachineCode(instruction);
-            I_FormatInstruction(toUppercase(m[1].str()), assembly,
+            I_FormatInstruction(toUppercase(mnemonic), assembly,
                                 unsolved_symbol_map, handel);
             cur_address += 4;
-        } else if (std::regex_search(assembly.c_str(), m, J_format_regex),
-                   !m.empty()) {  // J-format
+        } else if (isJ_Format(mnemonic)) {  // J-format
             MachineCodeHandle handel = NewMachineCode(instruction);
-            J_FormatInstruction(toUppercase(m[1].str()), assembly,
+            J_FormatInstruction(toUppercase(mnemonic), assembly,
                                 unsolved_symbol_map, handel);
             cur_address += 4;
-        } else if (std::regex_search(assembly.c_str(), m, Macro_format_regex),
-                   !m.empty()) {  // J-format
+        } else if (isMacro_Format(mnemonic)) {  // ∫Í÷∏¡Ó
             MachineCodeHandle handel = NewMachineCode(instruction);
-            Macro_FormatInstruction(toUppercase(m[1].str()), assembly,
+            Macro_FormatInstruction(toUppercase(mnemonic), assembly,
                                     unsolved_symbol_map, handel);
             cur_address += 4;
         } else {

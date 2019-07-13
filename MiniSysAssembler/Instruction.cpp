@@ -107,6 +107,13 @@ void SetAddress(MachineCode& machine_code, unsigned address) {
     machine_code |= address << 0;
 }
 
+std::string GetMnemonic(const std::string& assembly) {
+    static std::regex re("^\\s*(\\S+)");
+    std::smatch match;
+    std::regex_search(assembly, match, re);
+    return match[1].matched ? match[1].str() : "";
+}
+
 void GetOperand(const std::string& assembly, std::string& op1, std::string& op2,
                 std::string& op3) {
     static std::regex re_3("\\s*\\S+\\s*(\\S+)\\s*,\\s*(\\S+)\\s*,\\s*(\\S+)",

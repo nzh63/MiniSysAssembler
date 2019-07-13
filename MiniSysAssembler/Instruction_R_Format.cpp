@@ -17,7 +17,7 @@
 #include "pch.h"
 
 std::regex R_format_regex(
-    "^(addu?|subu?|and|[xn]?or|sltu?|s(?:ll|rl|ra)v?|jr)\\s",
+    "^(addu?|subu?|and|[xn]?or|sltu?|s(?:ll|rl|ra)v?|jr)",
     std::regex::icase);
 
 MachineCode R_FormatInstruction(const std::string& mnemonic,
@@ -95,9 +95,10 @@ MachineCode R_FormatInstruction(const std::string& mnemonic,
 bool isR_Format(MachineCode machine_code) { return (machine_code >> 26 == 0); }
 
 bool isR_Format(const std::string& assembly) {
+    std::string mnemonic = GetMnemonic(assembly);
     std::cmatch m;
-    std::regex_search(assembly.c_str(), m, R_format_regex);
-    if (!m.empty()) {
+    std::regex_match(mnemonic.c_str(), m, R_format_regex);
+    if (!m.empty() && m.prefix().str().empty() && m.suffix().str().empty()) {
         return true;
     } else {
         return false;
