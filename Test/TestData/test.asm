@@ -10,13 +10,8 @@
 .text 0x0
 start:
     nop
-    ori     $0, $0, 0
-    mov     $1, AAA($0)
-    lw      $1, AAA($0)
-    mov     AAA($0), $1
-    sw      $1, AAA($0)
-    push    $1
-    pop     $1
+main:
+    # minsys-1
     add     $1, $2, $3
     addu    $1, $2, $3
     sub     $1, $2, $3
@@ -42,9 +37,9 @@ start:
     lui     $1, 10
     lw      $1, 10($2)
     sw      $1, AAA($2)
-    beq     $1, $2, 40
+    beq     $1, $2, 10
     beq     $1, $2, start
-    bne     $1, $2, 40
+    bne     $1, $2, 10
     bne     $1, $2, start
     slti    $1, $2, 10
     sltiu   $1, $2, 10
@@ -53,3 +48,38 @@ start:
     jal     100
     jal     start
 
+    # minisys-1A
+    mult    $2, $3
+    multu   $2, $3
+    div     $2, $3
+    divu    $2, $3
+    mfhi    $1
+    mflo    $1
+    mthi    $1
+    mtlo    $1
+    mfc0    $3, $1, 0
+    mtc0    $3, $1, 0
+    jalr    $31, $3
+    break
+    syscall
+    eret
+    lb      $1, 10($2)
+    lbu     $1, 10($2)
+    lh      $1, 10($2)
+    lhu     $1, 10($2)
+    sb      $1, 10($2)
+    sh      $1, 10($2)
+    bgez    $1, 10
+    bgtz    $1, 10
+    blez    $1, 10
+    bltz    $1, 10
+    bgezal  $1, 10
+    bltzal  $1, 10
+
+    # 宏指令
+    mov     $1, AAA($0)
+    lw      $1, AAA($0)
+    mov     AAA($0), $1
+    sw      $1, AAA($0)
+    push    $1
+    pop     $1

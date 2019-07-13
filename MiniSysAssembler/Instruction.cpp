@@ -83,9 +83,6 @@ void SetFunc(MachineCode& machine_code, unsigned func) {
 }
 void SetImmediate(MachineCode& machine_code, int immediate) {
     int op = machine_code >> 26;
-    if (op == 0b000100 || op == 0b000101) {
-        immediate >>= 2;
-    }
     if (immediate >= 65536) {
         throw std::runtime_error(
             "Immediate is too large. It should not larger than 65535. "
@@ -96,7 +93,6 @@ void SetImmediate(MachineCode& machine_code, int immediate) {
     machine_code |= (immediate << 0) & 0xffff;
 }
 void SetAddress(MachineCode& machine_code, unsigned address) {
-    address >>= 2;
     if (address >= 67108864) {
         throw std::runtime_error(
             "Address is too large. It should not larger than 67108863. "
@@ -116,11 +112,11 @@ std::string GetMnemonic(const std::string& assembly) {
 
 void GetOperand(const std::string& assembly, std::string& op1, std::string& op2,
                 std::string& op3) {
-    static std::regex re_3("\\s*\\S+\\s*(\\S+)\\s*,\\s*(\\S+)\\s*,\\s*(\\S+)",
+    static std::regex re_3("\\s*\\S+\\s+(\\S+)\\s*,\\s*(\\S+)\\s*,\\s*(\\S+)",
                            std::regex::icase),  // 三操作数
-        re_2("\\s*\\S+\\s*(\\S+)\\s*,\\s*(\\S+)",
+        re_2("\\s*\\S+\\s+(\\S+)\\s*,\\s*(\\S+)",
              std::regex::icase),                        // 二操作数
-        re_1("\\s*\\S+\\s*(\\S+)", std::regex::icase);  // 一操作数
+        re_1("\\s*\\S+\\s+(\\S+)", std::regex::icase);  // 一操作数
     std::smatch match;
     std::regex_match(assembly, match, re_3);
     if (!match.empty()) {  // 三操作数

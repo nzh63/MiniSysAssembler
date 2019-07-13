@@ -219,12 +219,15 @@ int SolveSymbol(UnsolvedSymbolMap& unsolved_symbol_map,
                 } else if (isI_Format(machine_code)) {
                     int imm = symbol_map.at(symbol);
                     int op = machine_code >> 26;
-                    if (op == 0b000100 || op == 0b000101) {
+                    if (op == 0b000100 || op == 0b000101 || op == 0b000001 ||
+                        op == 0b000111 || op == 0b000110) {
+                        // ×ªÌøÖ¸Áî
                         imm -= cur_address + 4;
+                        imm >>= 2;
                     }
                     SetImmediate(machine_code, imm);
                 } else if (isJ_Format(machine_code)) {
-                    int addr = symbol_map.at(symbol);
+                    int addr = symbol_map.at(symbol) >> 2;
                     SetAddress(machine_code, addr);
                 } else {
                     throw std::runtime_error("Unknow errors.");

@@ -44,6 +44,7 @@ bool isPositive(const std::string& str) {
 }
 
 int toNumber(const std::string& str, bool enable_hex) {
+    if (!isNumber(str)) throw std::runtime_error(str + " is not a number.");
     int ans;
     try {
         ans = std::stol(str, 0, enable_hex ? 0 : 10);
@@ -54,6 +55,7 @@ int toNumber(const std::string& str, bool enable_hex) {
 }
 
 unsigned toUNumber(const std::string& str, bool enable_hex) {
+    if (!isNumber(str)) throw std::runtime_error(str + " is not a number.");
     if (enable_hex)
         return std::stoul(str, 0, 0);
     else
