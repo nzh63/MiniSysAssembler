@@ -72,7 +72,7 @@ NOP
 ## 用法
 
 ```powershell
-MiniSysAssembler.exe 输入文件路径 [输出文件夹路径]
+MiniSysAssembler.exe [选项] 输入文件路径 [输出文件夹路径]
 ```
 如：
 ```powershell
@@ -80,6 +80,8 @@ MiniSysAssembler.exe 输入文件路径 [输出文件夹路径]
 MiniSysAssembler.exe C:\mycode.asm
 # 输出至D:\
 MiniSysAssembler.exe C:\mycode.asm D:\
+# 输出至D:\同时生成用于调试的细节信息
+MiniSysAssembler.exe --show-details C:\mycode.asm D:\
 ```
 然后程序会生成dmem32.coe和prgmip32.coe。
 

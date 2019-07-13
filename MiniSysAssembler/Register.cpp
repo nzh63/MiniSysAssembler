@@ -90,24 +90,29 @@ int NameToId(const std::string& str2) {
 }
 
 int Register(const std::string& str) {
-    if (!isRegister(str)) {
-        throw std::runtime_error(str + " is not a register.");
-    }
     std::string str2 = str.substr(1);
-    if (isPositive(str2)) {
-        return toNumber(str2, false);
-    } else {
-        int id = NameToId(str2);
-        if (id != -1) {
-            return id;
+    try {
+        if (isPositive(str2) && toNumber(str2, false) < 32) {
+            return toNumber(str2, false);
         } else {
-            throw std::runtime_error(str + " is not a register.");
+            int id = NameToId(str2);
+            if (id != -1) {
+                return id;
+            } else {
+                throw std::runtime_error(str + " is not a register.");
+            }
         }
+    } catch (std::out_of_range) {
+        throw std::runtime_error(str + " is not a register.");
     }
 }
 
 bool isRegister(const std::string& str) {
     std::string str2 = str.substr(1);
-    return str[0] == '$' && ((isPositive(str2) && (toNumber(str2) < 32)) ||
-                             NameToId(str2) != -1);
+    try {
+        return str[0] == '$' && ((isPositive(str2) && (toNumber(str2) < 32)) ||
+                                 NameToId(str2) != -1);
+    } catch (std::out_of_range) {
+        return false;
+    }
 }

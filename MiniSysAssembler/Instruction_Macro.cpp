@@ -64,7 +64,7 @@ MachineCode Macro_FormatInstruction(const std::string& mnemonic,
             }
         }
     } else if (mnemonic == "PUSH") {
-        if (isRegister(op1) && op2.empty() && op3.empty()) {
+        if (!op1.empty() && op2.empty() && op3.empty()) {
             MachineCodeHandle new_handel = NewMachineCode(*cur_instruction);
             machine_code_it = cur_instruction->machine_code.begin();
             I_FormatInstruction("ADDI", "ADDI $sp, $sp, -4",
@@ -76,7 +76,7 @@ MachineCode Macro_FormatInstruction(const std::string& mnemonic,
             throw std::runtime_error("Invalid operation (" + mnemonic + ").");
         }
     } else if (mnemonic == "POP") {
-        if (isRegister(op1) && op2.empty() && op3.empty()) {
+        if (!op1.empty() && op2.empty() && op3.empty()) {
             MachineCodeHandle new_handel = NewMachineCode(*cur_instruction);
             machine_code_it = cur_instruction->machine_code.begin();
             I_FormatInstruction("LW", "LW " + op1 + ", 0($sp)",

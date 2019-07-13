@@ -16,10 +16,12 @@
 
 #include "pch.h"
 
+#include "Version.h"
+
 void ShowAboutMessage(std::ostream& out) {
-    out << R"(A simple MiniSys-1 assembler
-Copyright (c) 2019 nzh63, All Rights Reserved.
-)";
+    out << "MiniSys-1A Assembler\n"
+        << $VERSION "(" $VERSION_CODENAME ") build on: " __DATE__ "\n"
+        << "Copyright (c) 2019 nzh63, All Rights Reserved.\n";
 }
 void ShowHelpMessage(std::ostream& out) {
     ShowAboutMessage(out);

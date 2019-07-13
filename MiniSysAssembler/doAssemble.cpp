@@ -18,8 +18,13 @@
 
 int doAssemble(const std::string &input_file_path,
                const std::string &output_folder_path, unsigned options) {
+    bool meet_error = 0;
     std::fstream file;
     file.open(input_file_path, std::ios_base::in);
+    if (!file.is_open()) {
+        Error("fail to open file: " + input_file_path);
+        return 1;
+    }
     InstructionList instruction_list;
     DataList data_list;
     int line = 0;
@@ -74,7 +79,7 @@ int doAssemble(const std::string &input_file_path,
                         instruction.line = line;
                         instruction.assembly = input;
                         for (unsigned i = 0; i < pos / 4; i++) {
-                            instruction.machine_code.push_back(0x34000000);
+                            instruction.machine_code.push_back(0);  // nop
                         }
                         instruction.address = 0;
                         instruction.done = true;
@@ -113,37 +118,42 @@ int doAssemble(const std::string &input_file_path,
     UnsolvedSymbolMap unsolved_symbol_map;
     SymbolMap symbol_map;
     if (GeneratedDataSegment(data_list, unsolved_symbol_map, symbol_map)) {
-        Debug("Error occurs, exiting.");
-        return 1;
+        meet_error = 1;
     }
     if (GeneratedMachineCode(instruction_list, unsolved_symbol_map,
                              symbol_map)) {
-        Debug("Error occurs, exiting.");
-        return 1;
+        meet_error = 1;
     }
-    if (SolveSymbol(unsolved_symbol_map, symbol_map)) {
-        Debug("Error occurs, exiting.");
-        return 1;
+    if (!meet_error && SolveSymbol(unsolved_symbol_map, symbol_map)) {
+        meet_error = 1;
     }
-
-    file.open(output_folder_path + "prgmip32.coe", std::ios_base::out);
-    if (file.is_open()) {
-        OutputInstruction(file, instruction_list);
-    }
-    file.close();
-
-    file.open(output_folder_path + "dmem32.coe", std::ios_base::out);
-    if (file.is_open()) {
-        OutputDataSegment(file, data_list);
-    }
-    file.close();
-
-    if (options | allow_options.at("--show-details")) {
-        file.open(output_folder_path + "details.txt", std::ios_base::out);
+    if (!meet_error) {
+        file.open(output_folder_path + "prgmip32.coe", std::ios_base::out);
         if (file.is_open()) {
-            ShowDetails(instruction_list, data_list, file);
+            OutputInstruction(file, instruction_list);
+        } else {
+            Error("fail to open file: " + output_folder_path + "prgmip32.coe");
         }
         file.close();
+
+        file.open(output_folder_path + "dmem32.coe", std::ios_base::out);
+        if (file.is_open()) {
+            OutputDataSegment(file, data_list);
+        } else {
+            Error("fail to open file: " + output_folder_path + "dmem32.coe");
+        }
+        file.close();
+
+        if (options | allow_options.at("--show-details")) {
+            file.open(output_folder_path + "details.txt", std::ios_base::out);
+            if (file.is_open()) {
+                ShowDetails(instruction_list, data_list, file);
+            } else {
+                Error("fail to open file: " + output_folder_path +
+                      "details.txt");
+            }
+            file.close();
+        }
     }
-    return 0;
+    return meet_error;
 }

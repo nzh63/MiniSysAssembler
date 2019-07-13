@@ -23,6 +23,7 @@ int GeneratedMachineCode(InstructionList& instruction_list,
                          UnsolvedSymbolMap& unsolved_symbol_map,
                          SymbolMap& symbol_map) {
     unsigned int address = 0;
+    bool meet_error = 0;
     cur_address = 0;
     for (auto& instruction : instruction_list) {
         if (instruction.done) {
@@ -42,20 +43,21 @@ int GeneratedMachineCode(InstructionList& instruction_list,
             } catch (const std::exception& e) {
                 Error(e.what(), &instruction);
                 cur_instruction = nullptr;
-                return 1;
+                meet_error = 1;
             }
             address = cur_address;
         }
         instruction.done = true;
         cur_instruction = nullptr;
     }
-    return 0;
+    return meet_error;
 }
 
 int GeneratedDataSegment(DataList& data_list,
                          UnsolvedSymbolMap& unsolved_symbol_map,
                          SymbolMap& symbol_map) {
     unsigned int address = 0;
+    bool meet_error = 0;
     cur_address = 0;
     for (auto& data : data_list) {
         if (data.done) {
@@ -73,14 +75,14 @@ int GeneratedDataSegment(DataList& data_list,
             } catch (const std::exception& e) {
                 Error(e.what());
                 cur_instruction = nullptr;
-                return 1;
+                meet_error = 1;
             }
 
             address = cur_address;
         }
         data.done = true;
     }
-    return 0;
+    return meet_error;
 }
 
 void ProcessInstruction(const std::string& assembly, Instruction& instruction,

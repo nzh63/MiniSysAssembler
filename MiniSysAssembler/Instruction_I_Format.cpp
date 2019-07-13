@@ -49,8 +49,7 @@ MachineCode I_FormatInstruction(const std::string& mnemonic,
         if (!match.empty()) {
             std::string op1 = match[1].str(), offect = match[2].str(),
                         op2 = match[3].str();
-            if (isRegister(op1) && isRegister(op2) &&
-                (isNumber(offect) || isSymbol(offect))) {
+            if ((isNumber(offect) || isSymbol(offect))) {
                 if (mnemonic == "LW") {
                     SetOP(machine_code, 0b100011);
                 } else if (mnemonic == "LH") {
@@ -145,22 +144,7 @@ MachineCode I_FormatInstruction(const std::string& mnemonic,
             } else {
                 goto err;
             }
-        }
-
-        /*  else if (mnemonic == "LUI" && isRegister(op1) &&
-                    (isNumber(op2) || isSymbol(op2)) && op3.empty()) {
-             SetOP(machine_code, 0b001111);
-             SetRS(machine_code, 0);
-             SetRT(machine_code, Register(op1));
-             if (isNumber(op2)) {
-                 SetImmediate(machine_code, toNumber(op2));
-             } else {
-                 SetImmediate(machine_code, 0);  // 标号，使用0占位
-                 unsolved_symbol_map[op2].push_back(
-                     SymbolRef{machine_code_it, cur_instruction});
-             }
-         }*/
-        else {
+        } else {
         err:
             if (isI_Format(assembly)) {
                 throw std::runtime_error("Invalid operation (" + mnemonic +
