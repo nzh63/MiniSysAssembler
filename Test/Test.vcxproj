@@ -160,7 +160,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Test.cpp" />
+    <ClCompile Include="doAssemble_Test.cpp" />
+    <ClCompile Include="I_Format_Test.cpp" />
+    <ClCompile Include="J_Format_Test.cpp" />
+    <ClCompile Include="R_Format_Test.cpp" />
+    <ClCompile Include="Register_Test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MiniSysAssembler\MiniSysAssembler.vcxproj">

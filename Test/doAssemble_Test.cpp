@@ -6,7 +6,7 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Test {
-TEST_CLASS(MiniSysAssembler){
+TEST_CLASS(doAssemble){
 	private:
 		bool isSameFile(std::string path1, std::string path2) {
 			std::fstream file1, file2;
@@ -27,7 +27,7 @@ TEST_CLASS(MiniSysAssembler){
         TEST_METHOD(doAssemble_Test){
             std::string out_path = std::filesystem::temp_directory_path().string();
             Assert::IsFalse(
-                doAssemble("../../Test/TestData/test.asm", out_path));
+                ::doAssemble("../../Test/TestData/test.asm", out_path));
             Assert::IsTrue(
                 isSameFile(out_path + "dmem32.coe",
                            "../../Test/TestData/CorrectAnswer/dmem32.coe"));
