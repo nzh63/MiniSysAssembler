@@ -29,6 +29,7 @@
 
 #include "Console.h"
 #include "Data.h"
+#include "Error.h"
 #include "Instruction.h"
 #include "Log.h"
 #include "Output.h"

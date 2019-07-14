@@ -35,16 +35,22 @@ MachineCode J_FormatInstruction(const std::string& mnemonic,
             }
             if (isNumber(op1)) {
                 SetAddress(machine_code, toNumber(op1));
+                Warning(
+                    "You are using an immediate value in jump instruction, "
+                    "please make sure that you know what you are doing.");
             } else {
                 SetAddress(machine_code, 0);  // 标号，使用0占位
                 unsolved_symbol_map[op1].push_back(
                     SymbolRef{machine_code_it, cur_instruction});
             }
         } else {
-            throw std::runtime_error("Invalid operation (" + mnemonic + ").");
+            if (op2.empty() && op3.empty())
+                throw ExceptNumberOrSymbol(op1);
+            else
+                throw TooManyOperand(mnemonic);
         }
     } else {
-        throw std::runtime_error("Unkonw instruction: " + mnemonic + ".");
+        throw UnkonwInstruction(mnemonic);
     }
     return machine_code;
 }

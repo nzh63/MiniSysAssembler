@@ -116,7 +116,7 @@ MachineCode R_FormatInstruction(const std::string& mnemonic,
             SetShamt(machine_code, 0);
             SetFunc(machine_code, func4.at(mnemonic));
         } else {
-            throw std::runtime_error(op1 + " shoulb be a register.");
+            goto err;
         }
     } else if (op1.empty() && op2.empty() && op3.empty()) {  // ÎÞ²Ù×÷Êý
         std::unordered_map<std::string, int> func5{
@@ -137,9 +137,9 @@ MachineCode R_FormatInstruction(const std::string& mnemonic,
     } else {
     err:
         if (isR_Format(assembly)) {
-            throw std::runtime_error("Invalid operation (" + mnemonic + ").");
+            throw OperandError(mnemonic);
         } else {
-            throw std::runtime_error("Unkonw instruction: " + mnemonic + ".");
+			throw UnkonwInstruction(mnemonic);
         }
     }
     return machine_code;

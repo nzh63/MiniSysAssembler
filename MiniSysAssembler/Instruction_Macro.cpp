@@ -26,7 +26,6 @@ MachineCode Macro_FormatInstruction(const std::string& mnemonic,
     GetOperand(assembly, op1, op2, op3);
     if (mnemonic == "MOV") {
         if (!op3.empty()) {
-            throw std::runtime_error("Invalid operation (" + mnemonic + ").");
         } else {
             if (isRegister(op1) && isRegister(op2)) {
                 R_FormatInstruction("OR", "OR " + op1 + ", $0, " + op2,
@@ -73,7 +72,7 @@ MachineCode Macro_FormatInstruction(const std::string& mnemonic,
                                 unsolved_symbol_map, new_handel);
             cur_address += 4;
         } else {
-            throw std::runtime_error("Invalid operation (" + mnemonic + ").");
+            throw OperandError(mnemonic);
         }
     } else if (mnemonic == "POP") {
         if (!op1.empty() && op2.empty() && op3.empty()) {
@@ -85,17 +84,17 @@ MachineCode Macro_FormatInstruction(const std::string& mnemonic,
                                 new_handel);
             cur_address += 4;
         } else {
-            throw std::runtime_error("Invalid operation (" + mnemonic + ").");
+            throw OperandError(mnemonic);
         }
     } else if (mnemonic == "NOP") {
-        R_FormatInstruction("SLL", "SLL $0, $0, 0",
-                            unsolved_symbol_map, machine_code_it);
+        R_FormatInstruction("SLL", "SLL $0, $0, 0", unsolved_symbol_map,
+                            machine_code_it);
     } else {
     err:
         if (isMacro_Format(assembly)) {
-            throw std::runtime_error("Invalid operation (" + mnemonic + ").");
+            throw OperandError(mnemonic);
         } else {
-            throw std::runtime_error("Unkonw instruction: " + mnemonic + ".");
+            throw UnkonwInstruction(mnemonic);
         }
     }
     return cur_instruction->machine_code.front();

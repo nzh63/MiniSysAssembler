@@ -99,11 +99,11 @@ int Register(const std::string& str) {
             if (id != -1) {
                 return id;
             } else {
-                throw std::runtime_error(str + " is not a register.");
+                throw ExceptRegister(str);
             }
         }
     } catch (std::out_of_range) {
-        throw std::runtime_error(str + " is not a register.");
+        throw ExceptRegister(str);
     }
 }
 

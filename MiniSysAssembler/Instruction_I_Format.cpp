@@ -32,8 +32,12 @@ MachineCode I_FormatInstruction(const std::string& mnemonic,
     bool is_mem = std::regex_match(mnemonic, std::regex("^L[BHW]U?|S[BHW]$"));
     if (mnemonic == "MFC0" || mnemonic == "MTC0") {
         // 虽然它是R类型，但为了方便处理，归为I类型
+        if (op3.empty()) {
+            op3 = "0";
+            Note("Unset sel field, set it to 0.");
+        }
         unsigned sel = toUNumber(op3);
-        if (sel > 7) throw std::runtime_error("Sel is too large.");
+        if (sel > 7) throw NumberOverflow("Sel", "7", std::to_string(sel));
         SetOP(machine_code, 0b010000);
         SetRS(machine_code, mnemonic == "MFC0" ? 0 : 0b00100);
         SetRT(machine_code, Register(op1));
@@ -47,9 +51,9 @@ MachineCode I_FormatInstruction(const std::string& mnemonic,
         std::smatch match;
         std::regex_match(assembly, match, re);
         if (!match.empty()) {
-            std::string op1 = match[1].str(), offect = match[2].str(),
+            std::string op1 = match[1].str(), offset = match[2].str(),
                         op2 = match[3].str();
-            if ((isNumber(offect) || isSymbol(offect))) {
+            if ((isNumber(offset) || isSymbol(offset))) {
                 if (mnemonic == "LW") {
                     SetOP(machine_code, 0b100011);
                 } else if (mnemonic == "LH") {
@@ -72,25 +76,22 @@ MachineCode I_FormatInstruction(const std::string& mnemonic,
                 SetRS(machine_code, Register(op2));
                 SetRT(machine_code, Register(op1));
                 // 右移两位在SetImmediate中完成
-                if (isNumber(offect)) {
+                if (isNumber(offset)) {
                     // BEQ与BNE的右移两位在SetImmediate中完成
-                    SetImmediate(machine_code, toNumber(offect));
+                    SetImmediate(machine_code, toNumber(offset));
                 } else {
                     SetImmediate(machine_code, 0);  // 标号，使用0占位
-                    unsolved_symbol_map[offect].push_back(
+                    unsolved_symbol_map[offset].push_back(
                         SymbolRef{machine_code_it, cur_instruction});
                 }
             } else {
-                goto err_mem;
+                throw ExceptNumberOrSymbol(offset);
             }
         } else {
-        err_mem:
             if (isI_Format(assembly)) {
-                throw std::runtime_error("Invalid operation (" + mnemonic +
-                                         ").");
+                throw OperandError(mnemonic);
             } else {
-                throw std::runtime_error("Unkonw instruction: " + mnemonic +
-                                         ".");
+                throw UnkonwInstruction(mnemonic);
             }
         }
     } else {
@@ -108,8 +109,13 @@ MachineCode I_FormatInstruction(const std::string& mnemonic,
                 SetRS(machine_code, Register(op2));
                 SetRT(machine_code, Register(op1));
                 if (isNumber(op3)) {
-                    // BEQ与BNE的右移两位在SetImmediate中完成
                     SetImmediate(machine_code, toNumber(op3));
+                    if (mnemonic.front() == 'B') {
+                        Warning(
+                            "You are using an immediate value in branch "
+                            "instruction, please make sure that you know what "
+                            "you are doing.");
+                    }
                 } else {
                     SetImmediate(machine_code, 0);  // 标号，使用0占位
                     unsolved_symbol_map[op3].push_back(
@@ -136,22 +142,26 @@ MachineCode I_FormatInstruction(const std::string& mnemonic,
                 }
                 if (isNumber(op2)) {
                     SetImmediate(machine_code, toNumber(op2));
+                    if (mnemonic.front() == 'B') {
+                        Warning(
+                            "You are using an immediate value in branch "
+                            "instruction, please make sure that you know what "
+                            "you are doing.");
+                    }
                 } else {
                     SetImmediate(machine_code, 0);  // 标号，使用0占位
                     unsolved_symbol_map[op2].push_back(
                         SymbolRef{machine_code_it, cur_instruction});
                 }
             } else {
-                goto err;
+                throw ExceptNumberOrSymbol(op2);
             }
         } else {
         err:
             if (isI_Format(assembly)) {
-                throw std::runtime_error("Invalid operation (" + mnemonic +
-                                         ").");
+                throw OperandError(mnemonic);
             } else {
-                throw std::runtime_error("Unkonw instruction: " + mnemonic +
-                                         ".");
+                throw UnkonwInstruction(mnemonic);
             }
         }
     }

@@ -110,7 +110,7 @@ void ProcessInstruction(const std::string& assembly, Instruction& instruction,
                                     unsolved_symbol_map, handel);
             cur_address += 4;
         } else {
-            throw std::runtime_error("Unkonw instruction.");
+            throw UnkonwInstruction(mnemonic);
         }
     }
 }
@@ -128,6 +128,7 @@ void ProcessData(const std::string& assembly, Data& data,
                 std::regex re(R"(^([^:,\s]+)\s*(?:\:\s*([^:,\s]+))?(\s*,\s*)?)",
                               std::regex::icase);
                 do {
+					std::cmatch m;
                     std::regex_search(datastr.c_str(), m, re);
                     std::string cur_data_str = m[1].str(),
                                 repeat_time_str = m[2].str();
@@ -137,16 +138,11 @@ void ProcessData(const std::string& assembly, Data& data,
                         if (isPositive(repeat_time_str)) {
                             repeat_time = toUNumber(repeat_time_str);
                         } else {
-                            throw std::runtime_error("Repeat time error.");
+                            throw ExceptPositive(repeat_time_str);
                         }
                     }
                     if (!isNumber(cur_data_str)) {
-                        if (isSymbol(cur_data_str))
-                            throw std::runtime_error(
-                                "Need a number. Current version does support "
-                                "using symbol in data segment.");
-                        else
-                            throw std::runtime_error("Need a number.");
+                        throw ExceptNumber(cur_data_str);
                     }
                     std::uint32_t d = toNumber(cur_data_str);
                     for (unsigned i = 0; i < repeat_time; i++) {
@@ -169,12 +165,8 @@ void ProcessData(const std::string& assembly, Data& data,
                     }
                 } while (datastr != "");
             } else {
-                throw std::runtime_error("Unkonw error.");
+                throw UnkonwInstruction(type);
             }
-        } else {
-            throw std::runtime_error(
-                "We only supposed .word in data segment. The others will occur "
-                "error.");
         }
     }
 }

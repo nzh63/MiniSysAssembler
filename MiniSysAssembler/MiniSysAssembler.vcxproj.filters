@@ -60,6 +60,9 @@
     <ClCompile Include="ShowDetails.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Error.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Register.h">
@@ -75,9 +78,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Instruction_R_Format.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Log.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Instruction_I_Format.h">
@@ -108,6 +108,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Version.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Error.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="Error.cpp" />
     <ClCompile Include="Instruction.cpp" />
     <ClCompile Include="Instruction_I_Format.cpp" />
     <ClCompile Include="Instruction_J_Format.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="Console.h" />
     <ClInclude Include="Data.h" />
     <ClInclude Include="doAssemble.h" />
+    <ClInclude Include="Error.h" />
     <ClInclude Include="Instruction.h" />
     <ClInclude Include="Instruction_I_Format.h" />
     <ClInclude Include="Instruction_J_Format.h" />

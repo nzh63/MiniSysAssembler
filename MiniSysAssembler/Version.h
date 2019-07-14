@@ -16,5 +16,5 @@
 
 #pragma once
 
-#define $VERSION "v1.1.0.1"
+#define $VERSION "v1.1.0.2"
 #define $VERSION_CODENAME "sunflower"

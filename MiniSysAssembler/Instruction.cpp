@@ -23,60 +23,42 @@ MachineCodeHandle NewMachineCode(Instruction& i) {
 
 void SetOP(MachineCode& machine_code, unsigned OP) {
     if (OP >= 64) {
-        throw std::runtime_error(
-            "OP is too large. It should not larger than 63. "
-            "Now it is " +
-            std::to_string(OP));
+        throw NumberOverflow("OP", "63", std::to_string(OP));
     }
     machine_code &= 0b00000011111111111111111111111111;
     machine_code |= OP << 26;
 }
 void SetRS(MachineCode& machine_code, unsigned RS) {
     if (RS >= 32) {
-        throw std::runtime_error(
-            "RS is too large. It should not larger than 31. "
-            "Now it is " +
-            std::to_string(RS));
+        throw NumberOverflow("RS", "31", std::to_string(RS));
     }
     machine_code &= 0b11111100000111111111111111111111;
     machine_code |= RS << 21;
 }
 void SetRT(MachineCode& machine_code, unsigned RT) {
     if (RT >= 32) {
-        throw std::runtime_error(
-            "RT is too large. It should not larger than 31. "
-            "Now it is " +
-            std::to_string(RT));
+        throw NumberOverflow("RT", "31", std::to_string(RT));
     }
     machine_code &= 0b11111111111000001111111111111111;
     machine_code |= RT << 16;
 }
 void SetRD(MachineCode& machine_code, unsigned RD) {
     if (RD >= 32) {
-        throw std::runtime_error(
-            "RT is too large. It should not larger than 31. "
-            "Now it is " +
-            std::to_string(RD));
+        throw NumberOverflow("RD", "31", std::to_string(RD));
     }
     machine_code &= 0b11111111111111110000011111111111;
     machine_code |= RD << 11;
 }
 void SetShamt(MachineCode& machine_code, unsigned shamt) {
     if (shamt >= 32) {
-        throw std::runtime_error(
-            "Shamt is too large. It should not larger than 31. "
-            "Now it is " +
-            std::to_string(shamt));
+        throw NumberOverflow("Shamt", "31", std::to_string(shamt));
     }
     machine_code &= 0b11111111111111111111100000111111;
     machine_code |= shamt << 6;
 }
 void SetFunc(MachineCode& machine_code, unsigned func) {
     if (func >= 64) {
-        throw std::runtime_error(
-            "Shamt is too large. It should not larger than 63. "
-            "Now it is " +
-            std::to_string(func));
+        throw NumberOverflow("Function code", "31", std::to_string(func));
     }
     machine_code &= 0b11111111111111111111111111000000;
     machine_code |= func << 0;
@@ -84,20 +66,14 @@ void SetFunc(MachineCode& machine_code, unsigned func) {
 void SetImmediate(MachineCode& machine_code, int immediate) {
     int op = machine_code >> 26;
     if (immediate >= 65536) {
-        throw std::runtime_error(
-            "Immediate is too large. It should not larger than 65535. "
-            "Now it is " +
-            std::to_string(immediate));
+        throw NumberOverflow("Immediate", "65535", std::to_string(immediate));
     }
     machine_code &= 0xffff0000;
     machine_code |= (immediate << 0) & 0xffff;
 }
 void SetAddress(MachineCode& machine_code, unsigned address) {
     if (address >= 67108864) {
-        throw std::runtime_error(
-            "Address is too large. It should not larger than 67108863. "
-            "Now it is " +
-            std::to_string(address));
+        throw NumberOverflow("Address", "67108863", std::to_string(address));
     }
     machine_code &= 0b11111100000000000000000000000000;
     machine_code |= address << 0;

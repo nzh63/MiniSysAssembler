@@ -93,4 +93,3 @@ MiniSysAssembler.exe --show-details C:\mycode.asm D:\
 ## TODO
 
 1. 更多的宏语句.
-2. 更友好的错误提示。
