@@ -43,6 +43,22 @@ bool isPositive(const std::string& str) {
     }
 }
 
+bool isDecimal(const std::string& str) {
+    static std::regex re(R"(^\d+$)", std::regex::icase);
+    std::cmatch m;
+    if (str[0] == '-') {
+        std::regex_search(str.substr(1).c_str(), m, re);
+    } else {
+        std::regex_search(str.c_str(), m, re);
+    }
+    if (m[0].matched) {
+        return true;
+    } else {
+        return false;
+    }
+    
+}
+
 int toNumber(const std::string& str, bool enable_hex) {
     if (!isNumber(str)) throw std::runtime_error(str + " is not a number.");
     int ans;

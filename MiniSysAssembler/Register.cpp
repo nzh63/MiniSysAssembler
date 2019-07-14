@@ -92,7 +92,7 @@ int NameToId(const std::string& str2) {
 int Register(const std::string& str) {
     std::string str2 = str.substr(1);
     try {
-        if (isPositive(str2) && toNumber(str2, false) < 32) {
+        if (isPositive(str2) && isDecimal(str2) && toNumber(str2, false) < 32) {
             return toNumber(str2, false);
         } else {
             int id = NameToId(str2);
@@ -110,7 +110,8 @@ int Register(const std::string& str) {
 bool isRegister(const std::string& str) {
     std::string str2 = str.substr(1);
     try {
-        return str[0] == '$' && ((isPositive(str2) && (toNumber(str2) < 32)) ||
+        return str[0] == '$' && ((isPositive(str2) && isDecimal(str2) &&
+                                  (toNumber(str2) < 32)) ||
                                  NameToId(str2) != -1);
     } catch (std::out_of_range) {
         return false;

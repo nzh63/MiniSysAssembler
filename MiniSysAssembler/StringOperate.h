@@ -18,6 +18,7 @@
 std::string toUppercase(std::string str);
 bool isNumber(const std::string& str);
 bool isPositive(const std::string& str);
+bool isDecimal(const std::string& str);
 int toNumber(const std::string& str, bool enable_hex = true);
 unsigned toUNumber(const std::string& str, bool enable_hex = true);
 bool isSymbol(const std::string& str);
