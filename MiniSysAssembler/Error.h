@@ -16,37 +16,37 @@
 
 #pragma once
 
-class ExceptNumberOrSymbol : std::runtime_error {
+class ExceptNumberOrSymbol : public std::runtime_error {
    public:
     explicit ExceptNumberOrSymbol(const std::string &msg);
 };
-class ExceptNumber : std::runtime_error {
+class ExceptNumber : public std::runtime_error {
    public:
     explicit ExceptNumber(const std::string &msg);
 };
-class ExceptPositive : std::runtime_error {
+class ExceptPositive : public std::runtime_error {
    public:
     explicit ExceptPositive(const std::string &msg);
 };
-class ExceptRegister : std::runtime_error {
+class ExceptRegister : public std::runtime_error {
    public:
     explicit ExceptRegister(const std::string &name);
 };
-class OperandError : std::runtime_error {
+class OperandError : public std::runtime_error {
    public:
     explicit OperandError(const std::string &mnemonic,
                           const std::string &msg = "Invalid operation");
 };
-class TooManyOperand : OperandError {
+class TooManyOperand : public OperandError {
    public:
     explicit TooManyOperand(const std::string &mnemonic)
         : OperandError(mnemonic, "Too mamy operands"){};
 };
-class UnkonwInstruction : std::runtime_error {
+class UnkonwInstruction : public std::runtime_error {
    public:
     explicit UnkonwInstruction(const std::string &mnemonic);
 };
-class NumberOverflow : std::runtime_error {
+class NumberOverflow : public std::runtime_error {
    public:
     explicit NumberOverflow(const std::string &name, const std::string &max,
                             const std::string &now);
