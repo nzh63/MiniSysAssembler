@@ -40,20 +40,20 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
     }
 
 namespace Test {
-TEST_CLASS(I_Format_Test){
-    public:
-        I_Format_Test_fun_3(ADDI, $1, $2, 0x500, 0x20410500)
-        I_Format_Test_fun_3(ADDI, $s1, $s2, -5, 0x2251fffb)
-        I_Format_Test_fun_3(ADDIU, $1, $2, 0x500, 0x24410500)
-        I_Format_Test_fun_3(ADDIU, $s1, $s2, -5, 0x2651fffb)
-        I_Format_Test_fun_3(ORI, $t5, $t2, 100, 0x354d0064)
-        I_Format_Test_fun_3(XORI, $29, $1, 100, 0x383d0064)
-        I_Format_Test_fun_2(LUI, $a3, 0xFFFF, 0x3c07ffff)
-        I_Format_Test_fun_2(LW, $a2, 0xFF0($v1), 0x8c660ff0)
-        I_Format_Test_fun_2(SW, $27, 0x4($a3), 0xacfb0004)
-        I_Format_Test_fun_3(BEQ, $s7, $t6, main, 0x12ee0000)
-        I_Format_Test_fun_3(BNE, $v1, $a2, main, 0x14660000)
-        I_Format_Test_fun_3(SLTI, $ra, $31, -5, 0x2bfffffb)
-        I_Format_Test_fun_3(SLTIU, $3, $12, 0x75, 0x2d830075)
+TEST_CLASS(I_Format_Test) {
+   public:
+    I_Format_Test_fun_3(ADDI, $1, $2, 0x500, 0x20410500);
+    I_Format_Test_fun_3(ADDI, $s1, $s2, -5, 0x2251fffb);
+    I_Format_Test_fun_3(ADDIU, $1, $2, 0x500, 0x24410500);
+    I_Format_Test_fun_3(ADDIU, $s1, $s2, -5, 0x2651fffb);
+    I_Format_Test_fun_3(ORI, $t5, $t2, 100, 0x354d0064);
+    I_Format_Test_fun_3(XORI, $29, $1, 100, 0x383d0064);
+    I_Format_Test_fun_2(LUI, $a3, 0xFFFF, 0x3c07ffff);
+    I_Format_Test_fun_2(LW, $a2, 0xFF0($v1), 0x8c660ff0);
+    I_Format_Test_fun_2(SW, $27, 0x4($a3), 0xacfb0004);
+    I_Format_Test_fun_3(BEQ, $s7, $t6, main, 0x12ee0000);
+    I_Format_Test_fun_3(BNE, $v1, $a2, main, 0x14660000);
+    I_Format_Test_fun_3(SLTI, $ra, $31, -5, 0x2bfffffb);
+    I_Format_Test_fun_3(SLTIU, $3, $12, 0x75, 0x2d830075);
 };
-}
+}  // namespace Test

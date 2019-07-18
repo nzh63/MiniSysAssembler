@@ -40,25 +40,25 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
     }
 
 namespace Test {
-TEST_CLASS(R_Format_Test){
-    public:
-        R_Format_Test_fun_3(ADD, $15, $t3, $t2, 0x016a7820)
-        R_Format_Test_fun_3(ADDU, $s2, $s5, $s6, 0x02b69021)
-        R_Format_Test_fun_3(SUB, $s2, $zero, $at, 0x00019022)
-        R_Format_Test_fun_3(SUBU, $v1, $v0, $0, 0x00401823)
-        R_Format_Test_fun_3(AND, $t9, $t8, $gp, 0x031cc824)
-        R_Format_Test_fun_3(OR, $13, $15, $27, 0x01fb6825)
-        R_Format_Test_fun_3(XOR, $2, $0, $1, 0x00011026)
-        R_Format_Test_fun_3(NOR, $9, $9, $7, 0x01274827)
-        R_Format_Test_fun_3(SLT, $s1, $s2, $s5, 0x0255882a)
-        R_Format_Test_fun_3(SLTU, $a0, $s3, $a2, 0x0266202b)
-        R_Format_Test_fun_3(SLL, $8, $k0, 9, 0x001a4240)
-        R_Format_Test_fun_3(SRL, $k0, $k1, 4, 0x0001bd102)
-        R_Format_Test_fun_3(SRA, $fp, $ra, 1, 0x001ff043)
-        R_Format_Test_fun_3(SLLV, $8, $t4, $9, 0x012c4004)
-        R_Format_Test_fun_3(SRLV, $k0, $s6, $4, 0x0096d006)
-        R_Format_Test_fun_3(SRAV, $k1, $ra, $1, 0x003fd807)
-        R_Format_Test_fun_1(JR, $k1, 0x03600008)
-        R_Format_Test_fun_1(JR, $ra, 0x03e00008)
+TEST_CLASS(R_Format_Test) {
+   public:
+    R_Format_Test_fun_3(ADD, $15, $t3, $t2, 0x016a7820);
+    R_Format_Test_fun_3(ADDU, $s2, $s5, $s6, 0x02b69021);
+    R_Format_Test_fun_3(SUB, $s2, $zero, $at, 0x00019022);
+    R_Format_Test_fun_3(SUBU, $v1, $v0, $0, 0x00401823);
+    R_Format_Test_fun_3(AND, $t9, $t8, $gp, 0x031cc824);
+    R_Format_Test_fun_3(OR, $13, $15, $27, 0x01fb6825);
+    R_Format_Test_fun_3(XOR, $2, $0, $1, 0x00011026);
+    R_Format_Test_fun_3(NOR, $9, $9, $7, 0x01274827);
+    R_Format_Test_fun_3(SLT, $s1, $s2, $s5, 0x0255882a);
+    R_Format_Test_fun_3(SLTU, $a0, $s3, $a2, 0x0266202b);
+    R_Format_Test_fun_3(SLL, $8, $k0, 9, 0x001a4240);
+    R_Format_Test_fun_3(SRL, $k0, $k1, 4, 0x0001bd102);
+    R_Format_Test_fun_3(SRA, $fp, $ra, 1, 0x001ff043);
+    R_Format_Test_fun_3(SLLV, $8, $t4, $9, 0x012c4004);
+    R_Format_Test_fun_3(SRLV, $k0, $s6, $4, 0x0096d006);
+    R_Format_Test_fun_3(SRAV, $k1, $ra, $1, 0x003fd807);
+    R_Format_Test_fun_1(JR, $k1, 0x03600008);
+    R_Format_Test_fun_1(JR, $ra, 0x03e00008);
 };
-}
+}  // namespace Test

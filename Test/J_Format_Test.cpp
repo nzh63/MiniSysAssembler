@@ -31,9 +31,9 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
     }
 
 namespace Test {
-TEST_CLASS(J_Format_Test){
-    public:
-        J_Format_Test_fun_1(J, 5, 0x08000005)
-        J_Format_Test_fun_1(JAL, 5, 0x0c000005)
+TEST_CLASS(J_Format_Test) {
+   public:
+    J_Format_Test_fun_1(J, 5, 0x08000005);
+    J_Format_Test_fun_1(JAL, 5, 0x0c000005);
 };
-}
+}  // namespace Test
