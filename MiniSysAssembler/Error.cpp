@@ -17,13 +17,13 @@
 #include "pch.h"
 
 ExceptNumberOrSymbol::ExceptNumberOrSymbol(const std::string &msg)
-    : std::runtime_error(msg + "should be a number or a symbol."){};
+    : std::runtime_error(msg + " should be a number or a symbol."){};
 
 ExceptNumber::ExceptNumber(const std::string &msg)
-    : std::runtime_error(msg + "should be a number."){};
+    : std::runtime_error(msg + " should be a number."){};
 
 ExceptPositive::ExceptPositive(const std::string &msg)
-    : std::runtime_error(msg + "should be a positive number."){};
+    : std::runtime_error(msg + " should be a positive number."){};
 
 ExceptRegister::ExceptRegister(const std::string &name)
     : std::runtime_error(name + " is not a register."){};

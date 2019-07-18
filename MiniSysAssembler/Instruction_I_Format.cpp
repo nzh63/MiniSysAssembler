@@ -101,26 +101,31 @@ MachineCode I_FormatInstruction(const std::string& mnemonic,
                 {"ORI", 0b001101},  {"XORI", 0b001110},  {"BEQ", 0b000100},
                 {"BNE", 0b000101},  {"SLTI", 0b001010},  {"SLTIU", 0b001011}};
             auto it = op.find(mnemonic);
-            if (it != op.end() && (isNumber(op3) || isSymbol(op3))) {
-                if (mnemonic == "BEQ" || mnemonic == "BNE") {
-                    std::swap(op1, op2);
-                }
-                SetOP(machine_code, op.at(mnemonic));
-                SetRS(machine_code, Register(op2));
-                SetRT(machine_code, Register(op1));
-                if (isNumber(op3)) {
-                    SetImmediate(machine_code, toNumber(op3));
-                    if (mnemonic.front() == 'B') {
-                        Warning(
-                            "You are using an immediate value in branch "
-                            "instruction, please make sure that you know what "
-                            "you are doing.");
+            if (it != op.end()) {
+                if (isNumber(op3) || isSymbol(op3)) {
+                    if (mnemonic == "BEQ" || mnemonic == "BNE") {
+                        std::swap(op1, op2);
+                    }
+                    SetOP(machine_code, op.at(mnemonic));
+                    SetRS(machine_code, Register(op2));
+                    SetRT(machine_code, Register(op1));
+                    if (isNumber(op3)) {
+                        SetImmediate(machine_code, toNumber(op3));
+                        if (mnemonic.front() == 'B') {
+                            Warning(
+                                "You are using an immediate value in branch "
+                                "instruction, please make sure that you know "
+                                "what "
+                                "you are doing.");
+                        }
+                    } else {
+                        SetImmediate(machine_code, 0);  // 标号，使用0占位
+                        unsolved_symbol_map[op3].push_back(
+                            SymbolRef{machine_code_it, cur_instruction});
                     }
                 } else {
-                    SetImmediate(machine_code, 0);  // 标号，使用0占位
-                    unsolved_symbol_map[op3].push_back(
-                        SymbolRef{machine_code_it, cur_instruction});
-                }
+					throw ExceptNumberOrSymbol(op3);
+				}
             }
         } else if (!op1.empty() && !op2.empty() && op3.empty()) {  // 两操作数
             std::unordered_map<std::string, int> op{

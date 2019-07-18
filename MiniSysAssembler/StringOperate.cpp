@@ -92,7 +92,7 @@ bool isSymbol(const std::string& str) {
         std::regex re(R"(^[a-z0-9_.$]+$)", std::regex::icase);
         std::cmatch m;
         std::regex_search(str.c_str(), m, re);
-        return !m.empty() && !isPositive(str.substr(0, 1));
+        return !m.empty() && !isPositive(str.substr(0, 1)) && !isRegister(str);
     }
 }
 
